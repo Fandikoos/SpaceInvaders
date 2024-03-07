@@ -2,7 +2,7 @@ package com.svalero.spaceinvaders.screen;
 
 import com.badlogic.gdx.Screen;
 
-public class PreferenceScreen implements Screen {
+public class AboutUsScreen implements Screen {
     @Override
     public void show() {
 
