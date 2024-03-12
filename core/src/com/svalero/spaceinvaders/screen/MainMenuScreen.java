@@ -7,17 +7,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.svalero.spaceinvaders.Utils.FontUtils;
 
 public class MainMenuScreen implements Screen {
 
@@ -40,18 +38,14 @@ public class MainMenuScreen implements Screen {
         stage.addActor(table);
 
         // Configuración de estilo de texto
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/space_font.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 24; // Tamaño de la fuente, ajusta según sea necesario
-        BitmapFont font = generator.generateFont(parameter);
-        generator.dispose();
-
+        BitmapFont font = FontUtils.generateFont(24);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
         textButtonStyle.fontColor = Color.WHITE;
 
         VisTextButton playButton = new VisTextButton("PLAY");
         playButton.setStyle(textButtonStyle);
+
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -88,7 +82,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 VisUI.dispose();
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new PreferenceScreen());
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new AboutUsScreen());
             }
         });
 
