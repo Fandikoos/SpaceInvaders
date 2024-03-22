@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.svalero.spaceinvaders.domain.EnemyFleet;
 import com.svalero.spaceinvaders.domain.Missile;
 import com.svalero.spaceinvaders.domain.Player;
 
@@ -20,6 +21,7 @@ public class GameScreen implements Screen {
     Player player;
     boolean pause;
     Texture background;
+    EnemyFleet enemies;
 
     @Override
     public void show() {
@@ -28,6 +30,7 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         player = new Player(new Texture("ships/ship.png"), new Vector2(screenWidth / 2, 60), screenWidth, screenHeigth);
         background = new Texture("background/game.png");
+        enemies = new EnemyFleet(new Texture("ships/enemy.png"), screenWidth, screenHeigth);
         pause = false;
     }
 
@@ -59,6 +62,9 @@ public class GameScreen implements Screen {
         player.draw(batch, 0.4f);
         batch.end();
 
+        batch.begin();
+        enemies.draw(batch);
+        batch.end();
 
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
