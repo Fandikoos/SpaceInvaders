@@ -63,6 +63,7 @@ public class GameScreen implements Screen {
         batch.end();
 
         batch.begin();
+        enemies.update(dt);
         enemies.draw(batch);
         batch.end();
 
