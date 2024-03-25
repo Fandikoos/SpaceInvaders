@@ -1,17 +1,29 @@
 package com.svalero.spaceinvaders.domain;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnemyFleet {
     private List<Enemy> enemies;
+    private List<Missile> missiles;
+    private float speedEnemiesX = 90; //Velocidad horizontal que lleva la flota
+    private boolean moveRight = true; //Controlamos la dirección de movimiento
+    private float screenWidth = Gdx.graphics.getWidth();
+    private float fleetWidth;
+    private float limitFleetWidthX = 120;
+    private float missileTimer;  //Temporizador para el disparo de misiles
+    private final float missileInterval = 1.5f; //Intervalo de tiempo entre cada disparo
 
     public EnemyFleet(Texture texture, float screenWidth, float screenHeight){
         enemies = new ArrayList<>();
+        missiles = new ArrayList<>();
         float shipWidth = texture.getWidth();
         float shipHeight = texture.getHeight();
         float spaceBetweenShips = 5;
@@ -34,14 +46,87 @@ public class EnemyFleet {
             for (Enemy enemy : enemies) {
                 enemy.draw(batch, 0.8f);
             }
+            for (Missile missile : missiles){
+                missile.draw(batch);
+            }
         }
 
-        public List<Enemy> getEnemies(){
-        return enemies;
+        public void update(float dt){
+            if (moveRight){
+                moveRightPosition(dt);
+            } else {
+                moveLeftPosition(dt);
+            }
+            checkBounds(screenWidth);
+
+            missileTimer += dt;
+            //Disparar un misil si el temporizador ha alcanzado el intervalo
+            if (missileTimer >= missileInterval){
+                fireMissile();
+                missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
+            }
+
+            // Mover y actualizar la posición de los misiles
+            for (int i = 0; i < missiles.size(); i++){
+                Missile missile = missiles.get(i);
+                missile.move(0, -100 * dt);
+                // Eliminamos el misil si sale de la pantalla
+                if (missile.getPosition().y < -missile.getTexture().getHeight()){
+                    missiles.remove(i);
+                    i--;  //Decrementamos el índice con el misil eliminado
+                }
+            }
+        }
+
+    private void fireMissile() {
+        if (!enemies.isEmpty()){
+            // Escogemos una nave aleatoria de la flota para que realice el disparo
+            int randomIndex = MathUtils.random(enemies.size() - 1);
+            Enemy randomEnemy = enemies.get(randomIndex);
+            // Obtenemos la posicón de dicho enemigo
+            Vector2 enemyPosition = randomEnemy.getPosition();
+            // Agregamos el misil
+            missiles.add(new Missile(new Texture("ships/missileEnemies.png"), new Vector2(enemyPosition.x, enemyPosition.y)));
+        }
     }
 
+    private void moveRightPosition(float delta){
+            float maxEnemyX = Float.MIN_VALUE;
+            for (Enemy enemy : enemies){
+                enemy.move(speedEnemiesX * delta, 0);
+                if (enemy.getPosition().x > maxEnemyX){
+                    maxEnemyX = enemy.getPosition().x;
+                }
+            }
+            fleetWidth = maxEnemyX + enemies.get(0).getTexture().getWidth();
+        }
+
+        private void moveLeftPosition(float delta){
+            float minEnemyX = Float.MAX_VALUE;
+            for (Enemy enemy : enemies){
+                enemy.move(-speedEnemiesX * delta, 0);
+                if (enemy.getPosition().x < minEnemyX){
+                    minEnemyX = enemy.getPosition().x;
+                }
+                //Reflejamos el ancho total que tiene la flota de naves enemigas
+                fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getWidth();
+            }
+
+        }
+
+        public void checkBounds(float screenWidth){
+            if (fleetWidth >= screenWidth){
+                moveRight = false; //Cambiar de direccion hacia la izquierda
+            }
+            if (fleetWidth <= limitFleetWidthX){
+                moveRight = true; //Cambiar de direccion hacia la derecha
+            }
+        }
 
 
+        public List<Enemy> getEnemies(){
+            return enemies;
+        }
 
 
 }

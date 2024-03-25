@@ -11,8 +11,14 @@ public class Enemy extends Character{
 
     public Enemy(Texture texture, Vector2 position) {
         super(texture, position);
-
     }
 
-    //Movimiento de la name enemiga
+    public Vector2 getPosition(){
+        return position;
+    }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
 }
