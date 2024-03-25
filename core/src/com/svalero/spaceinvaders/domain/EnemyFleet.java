@@ -51,15 +51,15 @@ public class EnemyFleet {
             }
         }
 
-        public void update(float delta){
+        public void update(float dt){
             if (moveRight){
-                moveRightPosition(delta);
+                moveRightPosition(dt);
             } else {
-                moveLeftPosition(delta);
+                moveLeftPosition(dt);
             }
             checkBounds(screenWidth);
 
-            missileTimer += delta;
+            missileTimer += dt;
             //Disparar un misil si el temporizador ha alcanzado el intervalo
             if (missileTimer >= missileInterval){
                 fireMissile();
@@ -69,7 +69,7 @@ public class EnemyFleet {
             // Mover y actualizar la posición de los misiles
             for (int i = 0; i < missiles.size(); i++){
                 Missile missile = missiles.get(i);
-                missile.move(0, -100 * delta);
+                missile.move(0, -100 * dt);
                 // Eliminamos el misil si sale de la pantalla
                 if (missile.getPosition().y < -missile.getTexture().getHeight()){
                     missiles.remove(i);

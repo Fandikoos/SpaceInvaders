@@ -6,8 +6,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.svalero.spaceinvaders.domain.Asteroid;
 import com.svalero.spaceinvaders.domain.EnemyFleet;
 import com.svalero.spaceinvaders.domain.Missile;
 import com.svalero.spaceinvaders.domain.Player;
@@ -22,6 +24,9 @@ public class GameScreen implements Screen {
     boolean pause;
     Texture background;
     EnemyFleet enemies;
+    private List<Asteroid> fallAsteroids;
+    private float asteroidTimer;
+    private float asteroidInterval;
 
     @Override
     public void show() {
@@ -32,6 +37,16 @@ public class GameScreen implements Screen {
         background = new Texture("background/game.png");
         enemies = new EnemyFleet(new Texture("ships/enemy.png"), screenWidth, screenHeigth);
         pause = false;
+        fallAsteroids = new ArrayList<>();
+        asteroidTimer = 0;
+        asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
+
+    }
+
+    private void spawnAsteroids() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        fallAsteroids.add(new Asteroid(new Texture("ships/asteroid.png"), screenWidth, screenHeight));
     }
 
 
@@ -47,6 +62,18 @@ public class GameScreen implements Screen {
             missile.draw(batch);
         }
 
+        asteroidTimer += dt;
+        if (asteroidTimer >= asteroidInterval){
+            spawnAsteroids();
+            asteroidTimer=0;
+            asteroidInterval = MathUtils.random(5, 10);
+        }
+
+        //Dibujar asteroides
+        for (Asteroid asteroid : fallAsteroids){
+            asteroid.draw(batch, 0.7f);
+        }
+
         batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -56,6 +83,10 @@ public class GameScreen implements Screen {
         if (!pause) {
             player.manageInput();
             player.moveMissiles(); //Mover y eliminar los misiles
+
+            for (Asteroid asteroid : fallAsteroids){
+                asteroid.update(dt);
+            }
         }
 
         batch.begin();
