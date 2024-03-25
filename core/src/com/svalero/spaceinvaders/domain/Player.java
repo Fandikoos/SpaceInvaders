@@ -43,7 +43,7 @@ public class Player extends Character{
     }
 
     public void fire(){
-        Texture missileTexture = new Texture("ships/missile.png");
+        Texture missileTexture = new Texture("ships/missilePlayer.png");
 
         float missileX = rect.x + 25;
         //Posicion y donde sale el misil que es justo encima de la nava

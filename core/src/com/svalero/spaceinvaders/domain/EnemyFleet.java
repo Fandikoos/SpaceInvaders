@@ -3,6 +3,7 @@ package com.svalero.spaceinvaders.domain;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
@@ -11,14 +12,18 @@ import java.util.List;
 
 public class EnemyFleet {
     private List<Enemy> enemies;
+    private List<Missile> missiles;
     private float speedEnemiesX = 90; //Velocidad horizontal que lleva la flota
     private boolean moveRight = true; //Controlamos la dirección de movimiento
     private float screenWidth = Gdx.graphics.getWidth();
     private float fleetWidth;
     private float limitFleetWidthX = 120;
+    private float missileTimer;  //Temporizador para el disparo de misiles
+    private final float missileInterval = 1.5f; //Intervalo de tiempo entre cada disparo
 
     public EnemyFleet(Texture texture, float screenWidth, float screenHeight){
         enemies = new ArrayList<>();
+        missiles = new ArrayList<>();
         float shipWidth = texture.getWidth();
         float shipHeight = texture.getHeight();
         float spaceBetweenShips = 5;
@@ -41,6 +46,9 @@ public class EnemyFleet {
             for (Enemy enemy : enemies) {
                 enemy.draw(batch, 0.8f);
             }
+            for (Missile missile : missiles){
+                missile.draw(batch);
+            }
         }
 
         public void update(float delta){
@@ -50,9 +58,39 @@ public class EnemyFleet {
                 moveLeftPosition(delta);
             }
             checkBounds(screenWidth);
+
+            missileTimer += delta;
+            //Disparar un misil si el temporizador ha alcanzado el intervalo
+            if (missileTimer >= missileInterval){
+                fireMissile();
+                missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
+            }
+
+            // Mover y actualizar la posición de los misiles
+            for (int i = 0; i < missiles.size(); i++){
+                Missile missile = missiles.get(i);
+                missile.move(0, -100 * delta);
+                // Eliminamos el misil si sale de la pantalla
+                if (missile.getPosition().y < -missile.getTexture().getHeight()){
+                    missiles.remove(i);
+                    i--;  //Decrementamos el índice con el misil eliminado
+                }
+            }
         }
 
-        private void moveRightPosition(float delta){
+    private void fireMissile() {
+        if (!enemies.isEmpty()){
+            // Escogemos una nave aleatoria de la flota para que realice el disparo
+            int randomIndex = MathUtils.random(enemies.size() - 1);
+            Enemy randomEnemy = enemies.get(randomIndex);
+            // Obtenemos la posicón de dicho enemigo
+            Vector2 enemyPosition = randomEnemy.getPosition();
+            // Agregamos el misil
+            missiles.add(new Missile(new Texture("ships/missileEnemies.png"), new Vector2(enemyPosition.x, enemyPosition.y)));
+        }
+    }
+
+    private void moveRightPosition(float delta){
             float maxEnemyX = Float.MIN_VALUE;
             for (Enemy enemy : enemies){
                 enemy.move(speedEnemiesX * delta, 0);
