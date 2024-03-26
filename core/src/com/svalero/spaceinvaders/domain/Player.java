@@ -12,7 +12,7 @@ import java.util.List;
 public class Player extends Character{
 
     private float screenWidth;
-    private float screenHeight;
+    private final float screenHeight;
     private List<Missile> missiles;
 
     public Player(Texture texture, Vector2 position, float screenWidth, float screenHeight) {
@@ -29,7 +29,6 @@ public class Player extends Character{
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rect.x < rightLimit - rect.width){
             move(speed, 0);
-            System.out.println(screenWidth);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && rect.x > 0){
             move(-speed, 0);
@@ -43,7 +42,7 @@ public class Player extends Character{
     }
 
     public void fire(){
-        Texture missileTexture = new Texture("ships/missilePlayer.png");
+        Texture missileTexture = new Texture("game/missilePlayer.png");
 
         float missileX = rect.x + 25;
         //Posicion y donde sale el misil que es justo encima de la nava

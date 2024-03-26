@@ -4,29 +4,37 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.svalero.spaceinvaders.Utils.FontUtils;
+import com.svalero.spaceinvaders.Utils.MusicManager;
+import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 
 public class PreferenceScreen implements Screen {
     Stage stage;
     Preferences prefs;
+    private Music backgroungMusic;
 
     private void loadScreen() {
         if (!VisUI.isLoaded())
             VisUI.load();
 
         stage = new Stage();
+        prefs = PreferencesUtils.getPrefs();
+
+        if (prefs.getBoolean("sound")){
+            MusicManager.playMenuMusic();
+        } else {
+            MusicManager.stopMenuMusic();
+        }
 
         Texture backgroundTexture = new Texture(Gdx.files.internal("background/fondo_menu.jpg"));
         Image backgroundImage = new Image(backgroundTexture);
@@ -106,7 +114,7 @@ public class PreferenceScreen implements Screen {
     }
 
     private void loadPreferences() {
-        prefs = Gdx.app.getPreferences("TheGame");
+        prefs = Gdx.app.getPreferences("SpaceInvaders");
 
         if (!prefs.contains("sound"))
             prefs.putBoolean("sound", true);

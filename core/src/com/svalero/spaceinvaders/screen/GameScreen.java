@@ -1,21 +1,22 @@
 package com.svalero.spaceinvaders.screen;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.svalero.spaceinvaders.Utils.HudUtils;
+import com.svalero.spaceinvaders.Utils.MusicManager;
+import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.domain.Asteroid;
 import com.svalero.spaceinvaders.domain.EnemyFleet;
 import com.svalero.spaceinvaders.domain.Missile;
 import com.svalero.spaceinvaders.domain.Player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen implements Screen {
@@ -24,29 +25,36 @@ public class GameScreen implements Screen {
     boolean pause;
     Texture background;
     EnemyFleet enemies;
+    Preferences prefs;
     private List<Asteroid> fallAsteroids;
     private float asteroidTimer;
     private float asteroidInterval;
+    Sound shots;
+    private HudUtils hud;
 
     @Override
     public void show() {
+        MusicManager.stopMenuMusic();
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeigth = Gdx.graphics.getHeight();
+        hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch = new SpriteBatch();
-        player = new Player(new Texture("ships/ship.png"), new Vector2(screenWidth / 2, 60), screenWidth, screenHeigth);
+        player = new Player(new Texture("game/ship.png"), new Vector2(screenWidth / 2, 60), screenWidth, screenHeigth);
         background = new Texture("background/game.png");
-        enemies = new EnemyFleet(new Texture("ships/enemy.png"), screenWidth, screenHeigth);
+        enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
         pause = false;
+        shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
         fallAsteroids = new ArrayList<>();
         asteroidTimer = 0;
         asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
 
+        prefs = PreferencesUtils.getPrefs();
     }
 
     private void spawnAsteroids() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        fallAsteroids.add(new Asteroid(new Texture("ships/asteroid.png"), screenWidth, screenHeight));
+        fallAsteroids.add(new Asteroid(new Texture("game/asteroid.png"), screenWidth, screenHeight));
     }
 
 
@@ -78,6 +86,9 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             player.fire();
+            if (prefs.getBoolean("sound")){
+                shots.play();
+            }
         }
 
         if (!pause) {
@@ -98,6 +109,8 @@ public class GameScreen implements Screen {
         enemies.draw(batch);
         batch.end();
 
+        batch.setProjectionMatrix(hud.getProjectionMatrix());
+        hud.draw(batch);
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
@@ -133,6 +146,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        hud.dispose();
         player.dispose();
         background.dispose();
     }

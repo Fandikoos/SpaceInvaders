@@ -2,7 +2,9 @@ package com.svalero.spaceinvaders.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,16 +20,26 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.svalero.spaceinvaders.Utils.FontUtils;
+import com.svalero.spaceinvaders.Utils.MusicManager;
+import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 
 public class AboutUsScreen implements Screen {
     private Stage stage;
-
+    private Music backgroungMusic;
+    Preferences prefs;
     @Override
     public void show() {
         if (!VisUI.isLoaded())
             VisUI.load();
 
         stage = new Stage();
+        prefs = PreferencesUtils.getPrefs();
+
+        if (prefs.getBoolean("sound")){
+            MusicManager.playMenuMusic();
+        } else {
+            MusicManager.stopMenuMusic();
+        }
 
         Texture backgroundTexture = new Texture(Gdx.files.internal("background/fondo_menu.jpg"));
         Image backgroundImage = new Image(backgroundTexture);

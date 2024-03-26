@@ -1,11 +1,12 @@
 package com.svalero.spaceinvaders.domain;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,14 @@ public class EnemyFleet {
     private float limitFleetWidthX = 120;
     private float missileTimer;  //Temporizador para el disparo de misiles
     private final float missileInterval = 1.5f; //Intervalo de tiempo entre cada disparo
+    Preferences prefs;
+    Sound shots;
+
 
     public EnemyFleet(Texture texture, float screenWidth, float screenHeight){
         enemies = new ArrayList<>();
         missiles = new ArrayList<>();
+        prefs = Gdx.app.getPreferences("SpaceInvaders");
         float shipWidth = texture.getWidth();
         float shipHeight = texture.getHeight();
         float spaceBetweenShips = 5;
@@ -64,6 +69,9 @@ public class EnemyFleet {
             if (missileTimer >= missileInterval){
                 fireMissile();
                 missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
+                /*if (prefs.getBoolean("sound")){
+                    shots.play();
+                }*/
             }
 
             // Mover y actualizar la posición de los misiles
@@ -86,7 +94,7 @@ public class EnemyFleet {
             // Obtenemos la posicón de dicho enemigo
             Vector2 enemyPosition = randomEnemy.getPosition();
             // Agregamos el misil
-            missiles.add(new Missile(new Texture("ships/missileEnemies.png"), new Vector2(enemyPosition.x, enemyPosition.y)));
+            missiles.add(new Missile(new Texture("game/missileEnemies.png"), new Vector2(enemyPosition.x, enemyPosition.y)));
         }
     }
 
