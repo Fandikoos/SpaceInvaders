@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.MusicManager;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.domain.Asteroid;
@@ -28,12 +30,14 @@ public class GameScreen implements Screen {
     private float asteroidTimer;
     private float asteroidInterval;
     Sound shots;
+    private HudUtils hud;
 
     @Override
     public void show() {
         MusicManager.stopMenuMusic();
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeigth = Gdx.graphics.getHeight();
+        hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch = new SpriteBatch();
         player = new Player(new Texture("game/ship.png"), new Vector2(screenWidth / 2, 60), screenWidth, screenHeigth);
         background = new Texture("background/game.png");
@@ -105,6 +109,8 @@ public class GameScreen implements Screen {
         enemies.draw(batch);
         batch.end();
 
+        batch.setProjectionMatrix(hud.getProjectionMatrix());
+        hud.draw(batch);
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
@@ -140,6 +146,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        hud.dispose();
         player.dispose();
         background.dispose();
     }
