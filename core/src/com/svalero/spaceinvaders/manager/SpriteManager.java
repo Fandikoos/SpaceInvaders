@@ -99,4 +99,3 @@ public class SpriteManager implements Disposable {
 
     }
 }
-

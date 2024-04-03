@@ -5,6 +5,8 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -43,48 +45,48 @@ public class EnemyFleet {
                 float x = startX + col * (shipWidth + spaceBetweenShips);
                 float y = startY + row * (shipHeight + spaceBetweenShips);
                 enemies.add(new Enemy(texture, new Vector2(x, y)));
-                }
             }
         }
+    }
 
-        public void draw(SpriteBatch batch) {
-            for (Enemy enemy : enemies) {
-                enemy.draw(batch, 0.8f);
-            }
-            for (Missile missile : missiles){
-                missile.draw(batch);
-            }
+    public void draw(SpriteBatch batch) {
+        for (Enemy enemy : enemies) {
+            enemy.draw(batch, 0.8f);
         }
+        for (Missile missile : missiles){
+            missile.draw(batch);
+        }
+    }
 
-        public void update(float dt){
-            if (moveRight){
-                moveRightPosition(dt);
-            } else {
-                moveLeftPosition(dt);
-            }
-            checkBounds(screenWidth);
+    public void update(float dt){
+        if (moveRight){
+            moveRightPosition(dt);
+        } else {
+            moveLeftPosition(dt);
+        }
+        checkBounds(screenWidth);
 
-            missileTimer += dt;
-            //Disparar un misil si el temporizador ha alcanzado el intervalo
-            if (missileTimer >= missileInterval){
-                fireMissile();
-                missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
+        missileTimer += dt;
+        //Disparar un misil si el temporizador ha alcanzado el intervalo
+        if (missileTimer >= missileInterval){
+            fireMissile();
+            missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
                 /*if (prefs.getBoolean("sound")){
                     shots.play();
                 }*/
-            }
+        }
 
-            // Mover y actualizar la posición de los misiles
-            for (int i = 0; i < missiles.size(); i++){
-                Missile missile = missiles.get(i);
-                missile.move(0, -100 * dt);
-                // Eliminamos el misil si sale de la pantalla
-                if (missile.getPosition().y < -missile.getTexture().getHeight()){
-                    missiles.remove(i);
-                    i--;  //Decrementamos el índice con el misil eliminado
-                }
+        // Mover y actualizar la posición de los misiles
+        for (int i = 0; i < missiles.size(); i++){
+            Missile missile = missiles.get(i);
+            missile.move(0, -100 * dt);
+            // Eliminamos el misil si sale de la pantalla
+            if (missile.getPosition().y < -missile.getTexture().getHeight()){
+                missiles.remove(i);
+                i--;  //Decrementamos el índice con el misil eliminado
             }
         }
+    }
 
     private void fireMissile() {
         if (!enemies.isEmpty()){
@@ -99,42 +101,42 @@ public class EnemyFleet {
     }
 
     private void moveRightPosition(float delta){
-            float maxEnemyX = Float.MIN_VALUE;
-            for (Enemy enemy : enemies){
-                enemy.move(speedEnemiesX * delta, 0);
-                if (enemy.getPosition().x > maxEnemyX){
-                    maxEnemyX = enemy.getPosition().x;
-                }
-            }
-            fleetWidth = maxEnemyX + enemies.get(0).getTexture().getWidth();
-        }
-
-        private void moveLeftPosition(float delta){
-            float minEnemyX = Float.MAX_VALUE;
-            for (Enemy enemy : enemies){
-                enemy.move(-speedEnemiesX * delta, 0);
-                if (enemy.getPosition().x < minEnemyX){
-                    minEnemyX = enemy.getPosition().x;
-                }
-                //Reflejamos el ancho total que tiene la flota de naves enemigas
-                fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getWidth();
-            }
-
-        }
-
-        public void checkBounds(float screenWidth){
-            if (fleetWidth >= screenWidth){
-                moveRight = false; //Cambiar de direccion hacia la izquierda
-            }
-            if (fleetWidth <= limitFleetWidthX){
-                moveRight = true; //Cambiar de direccion hacia la derecha
+        float maxEnemyX = Float.MIN_VALUE;
+        for (Enemy enemy : enemies){
+            enemy.move(speedEnemiesX * delta, 0);
+            if (enemy.getPosition().x > maxEnemyX){
+                maxEnemyX = enemy.getPosition().x;
             }
         }
+        fleetWidth = maxEnemyX + enemies.get(0).getTexture().getWidth();
+    }
 
-
-        public List<Enemy> getEnemies(){
-            return enemies;
+    private void moveLeftPosition(float delta){
+        float minEnemyX = Float.MAX_VALUE;
+        for (Enemy enemy : enemies){
+            enemy.move(-speedEnemiesX * delta, 0);
+            if (enemy.getPosition().x < minEnemyX){
+                minEnemyX = enemy.getPosition().x;
+            }
+            //Reflejamos el ancho total que tiene la flota de naves enemigas
+            fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getWidth();
         }
+
+    }
+
+    public void checkBounds(float screenWidth){
+        if (fleetWidth >= screenWidth){
+            moveRight = false; //Cambiar de direccion hacia la izquierda
+        }
+        if (fleetWidth <= limitFleetWidthX){
+            moveRight = true; //Cambiar de direccion hacia la derecha
+        }
+    }
+
+
+    public List<Enemy> getEnemies(){
+        return enemies;
+    }
 
 
 }

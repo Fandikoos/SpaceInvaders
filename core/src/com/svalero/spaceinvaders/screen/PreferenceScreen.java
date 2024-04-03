@@ -14,8 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.svalero.spaceinvaders.Utils.FontUtils;
+import com.svalero.spaceinvaders.manager.ConfigurationManager;
 import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
+
+import static com.svalero.spaceinvaders.Utils.Constans.*;
 
 public class PreferenceScreen implements Screen {
     Stage stage;
@@ -28,7 +31,7 @@ public class PreferenceScreen implements Screen {
         stage = new Stage();
         prefs = PreferencesUtils.getPrefs();
 
-        if (prefs.getBoolean("sound")){
+        if (ConfigurationManager.isSoundEnabled()){
             MusicManager.playMenuMusic();
         } else {
             MusicManager.stopMenuMusic();
@@ -50,11 +53,11 @@ public class PreferenceScreen implements Screen {
 
 
         final VisCheckBox checkSound = new VisCheckBox("SOUND");
-        checkSound.setChecked(prefs.getBoolean("sound"));
+        checkSound.setChecked(ConfigurationManager.isSoundEnabled());
         checkSound.setColor(Color.WHITE);
         checkSound.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                prefs.putBoolean("sound", checkSound.isChecked());
+                ConfigurationManager.switchSound(checkSound.isChecked());
             }
         });
 
@@ -62,22 +65,23 @@ public class PreferenceScreen implements Screen {
         difficultyLabel.setColor(Color.WHITE);
         difficultyLabel.setStyle(new Label.LabelStyle(FontUtils.generateFont(24), Color.WHITE)); // Aplicar estilo de fuente
 
-        String[] resolutionsArray = {"LOW", "MEDIUM", "HIGH"};
+        String[] resolutionsArray = {LOW, MEDIUM, HARD};
         final VisList difficultyList = new VisList();
         difficultyList.setItems(resolutionsArray);
         difficultyList.setColor(Color.WHITE);
         //difficultyList.setStyle(new List.ListStyle(FontUtils.generateFont(24), Color.WHITE, Color.WHITE, new TextureRegionDrawable())); // Aplicar estilo de fuente
+        difficultyList.setSelected(ConfigurationManager.getDifficulty());
         difficultyList.addListener(new ClickListener() {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 switch (difficultyList.getSelectedIndex()) {
                     case 0:
-                        prefs.putString("difficulty", "low");
+                        ConfigurationManager.setDifficulty(LOW);
                         break;
                     case 1:
-                        prefs.putString("difficulty", "medium");
+                        ConfigurationManager.setDifficulty(MEDIUM);
                         break;
                     case 2:
-                        prefs.putString("difficulty", "high");
+                        ConfigurationManager.setDifficulty(HARD);
                         break;
                     default:
                 }
@@ -112,10 +116,8 @@ public class PreferenceScreen implements Screen {
     }
 
     private void loadPreferences() {
-        prefs = Gdx.app.getPreferences("SpaceInvaders");
-
-        if (!prefs.contains("sound"))
-            prefs.putBoolean("sound", true);
+        if (!ConfigurationManager.isSoundAlreadyConfigured())
+            ConfigurationManager.enableSound();
     }
 
     @Override
