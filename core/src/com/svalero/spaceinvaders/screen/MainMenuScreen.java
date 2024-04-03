@@ -16,9 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.svalero.spaceinvaders.utils.FontUtils;
-import com.svalero.spaceinvaders.utils.MusicManager;
-import com.svalero.spaceinvaders.utils.PreferencesUtils;
+import com.svalero.spaceinvaders.Utils.FontUtils;
+import com.svalero.spaceinvaders.manager.MusicManager;
+import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 
 public class MainMenuScreen implements Screen {
 

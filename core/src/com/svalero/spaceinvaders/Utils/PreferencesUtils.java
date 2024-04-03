@@ -1,4 +1,4 @@
-package com.svalero.spaceinvaders.utils;
+package com.svalero.spaceinvaders.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
