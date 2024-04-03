@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,9 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.svalero.spaceinvaders.Utils.FontUtils;
-import com.svalero.spaceinvaders.Utils.MusicManager;
-import com.svalero.spaceinvaders.Utils.PreferencesUtils;
+import com.svalero.spaceinvaders.utils.FontUtils;
+import com.svalero.spaceinvaders.utils.MusicManager;
+import com.svalero.spaceinvaders.utils.PreferencesUtils;
 
 public class MainMenuScreen implements Screen {
 

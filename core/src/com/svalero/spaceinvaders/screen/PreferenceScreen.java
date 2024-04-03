@@ -14,9 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
-import com.svalero.spaceinvaders.Utils.FontUtils;
-import com.svalero.spaceinvaders.Utils.MusicManager;
-import com.svalero.spaceinvaders.Utils.PreferencesUtils;
+import com.svalero.spaceinvaders.utils.FontUtils;
+import com.svalero.spaceinvaders.utils.MusicManager;
+import com.svalero.spaceinvaders.utils.PreferencesUtils;
 
 public class PreferenceScreen implements Screen {
     Stage stage;

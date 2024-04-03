@@ -1,4 +1,4 @@
-package com.svalero.spaceinvaders.Utils;
+package com.svalero.spaceinvaders.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
