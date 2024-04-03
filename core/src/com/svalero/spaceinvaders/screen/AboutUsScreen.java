@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,12 +19,11 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.svalero.spaceinvaders.Utils.FontUtils;
-import com.svalero.spaceinvaders.Utils.MusicManager;
+import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 
 public class AboutUsScreen implements Screen {
     private Stage stage;
-    private Music backgroungMusic;
     Preferences prefs;
     @Override
     public void show() {

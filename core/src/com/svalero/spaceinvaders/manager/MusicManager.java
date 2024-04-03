@@ -1,10 +1,12 @@
-package com.svalero.spaceinvaders.Utils;
+package com.svalero.spaceinvaders.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class MusicManager {
     private static Music music;
+
 
     public static void playMenuMusic(){
         if (music == null){
