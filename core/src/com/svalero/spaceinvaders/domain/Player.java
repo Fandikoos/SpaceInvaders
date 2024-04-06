@@ -15,8 +15,8 @@ public class Player extends Character{
     private final float screenHeight;
     private List<Missile> missiles;
 
-    public Player(Texture texture, Vector2 position, float screenWidth, float screenHeight) {
-        super(texture, position);
+    public Player(String animationName, Vector2 vector2, float screenWidth, float screenHeight) {
+        super(new Vector2(0, 0), animationName);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.missiles = new ArrayList<>();
@@ -46,7 +46,7 @@ public class Player extends Character{
 
         float missileX = rect.x + 25;
         //Posicion y donde sale el misil que es justo encima de la nava
-        float missileY = rect.y + texture.getHeight()/2;
+        float missileY = rect.y + currentFrame.getRegionHeight()/2;
         Vector2 missilePosition = new Vector2(missileX, missileY);
         Missile missile = new Missile(missileTexture, missilePosition);
         missiles.add(missile);

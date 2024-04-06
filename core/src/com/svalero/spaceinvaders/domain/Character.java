@@ -14,18 +14,26 @@ import com.svalero.spaceinvaders.manager.ResourceManager;
 
 public class Character implements Disposable {
 
-    public Texture texture;
     public Vector2 position;
     public Rectangle rect;
+    private Animation<TextureRegion> animation;
+    private float stateTime;
+    public TextureRegion currentFrame;
 
-    public Character(Texture texture, Vector2 position) {
-        this.texture = texture;
+    public Character(Vector2 position, String animationName) {
         this.position = position;
-        rect = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
+
+        animation = new Animation<>(0.15f, ResourceManager.getAnimation(animationName));
+        currentFrame = animation.getKeyFrame(0);
+
+        rect = new Rectangle(position.x, position.y, currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
     }
 
     public void draw (SpriteBatch batch, float scale){
-        batch.draw(texture, position.x, position.y, texture.getWidth() * scale, texture.getHeight() * scale);
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        currentFrame = animation.getKeyFrame(stateTime, true);
+        batch.draw(currentFrame, position.x, position.y, currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
     }
 
     public void move(float x, float y){
@@ -36,6 +44,5 @@ public class Character implements Disposable {
 
     @Override
     public void dispose() {
-        texture.dispose();
     }
 }

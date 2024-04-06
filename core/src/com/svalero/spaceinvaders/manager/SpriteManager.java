@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -34,7 +35,7 @@ public class SpriteManager implements Disposable {
     private void initialize(){
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeigth = Gdx.graphics.getHeight();
-        player = new Player(new Texture("game/ship.png"), new Vector2(screenWidth / 2, 60), screenWidth, screenHeigth);
+        player = new Player("ship", new Vector2(screenWidth / 2, 60),  screenWidth, screenHeigth);
         enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
         pause = false;
         shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
@@ -46,7 +47,7 @@ public class SpriteManager implements Disposable {
     private void spawnAsteroids() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        fallAsteroids.add(new Asteroid(new Texture("game/asteroid.png"), screenWidth, screenHeight));
+        fallAsteroids.add(new Asteroid(new Vector2(), new TextureRegion(new Texture("game/stone_1.png")), "stone", screenWidth, screenHeight));
     }
 
     //Eventos de la pantalla

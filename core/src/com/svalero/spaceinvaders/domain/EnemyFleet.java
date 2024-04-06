@@ -44,14 +44,14 @@ public class EnemyFleet {
             for (int col = 0; col < cols; col++){
                 float x = startX + col * (shipWidth + spaceBetweenShips);
                 float y = startY + row * (shipHeight + spaceBetweenShips);
-                enemies.add(new Enemy(texture, new Vector2(x, y)));
+                enemies.add(new Enemy(new Vector2(x, y), "enemy"));
             }
         }
     }
 
     public void draw(SpriteBatch batch) {
         for (Enemy enemy : enemies) {
-            enemy.draw(batch, 0.8f);
+            enemy.draw(batch, 2f);
         }
         for (Missile missile : missiles){
             missile.draw(batch);
@@ -108,7 +108,7 @@ public class EnemyFleet {
                 maxEnemyX = enemy.getPosition().x;
             }
         }
-        fleetWidth = maxEnemyX + enemies.get(0).getTexture().getWidth();
+        fleetWidth = maxEnemyX + enemies.get(0).getTexture().getRegionWidth();
     }
 
     private void moveLeftPosition(float delta){
@@ -119,7 +119,7 @@ public class EnemyFleet {
                 minEnemyX = enemy.getPosition().x;
             }
             //Reflejamos el ancho total que tiene la flota de naves enemigas
-            fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getWidth();
+            fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getRegionWidth();
         }
 
     }
