@@ -1,12 +1,10 @@
 package com.svalero.spaceinvaders.manager;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-import java.io.File;
 
 public class ResourceManager {
 
@@ -17,15 +15,15 @@ public class ResourceManager {
     }
 
     public static void loadAllResources() {
-        assetManager.load("SpaceInvaders.atlas", TextureAtlas.class);
+        assetManager.load("spaceinvaders.atlas", TextureAtlas.class);
     }
 
     public static TextureRegion getTexture(String name) {
-        return assetManager.get("SpaceInvaders.atlas", TextureAtlas.class).findRegion(name);
+        return assetManager.get("spaceinvaders.atlas", TextureAtlas.class).findRegion(name);
     }
 
     public static Array<TextureAtlas.AtlasRegion> getAnimation(String name) {
-        return assetManager.get("SpaceInvaders.atlas", TextureAtlas.class).findRegions(name);
+        return assetManager.get("spaceinvaders.atlas", TextureAtlas.class).findRegions(name);
     }
 
 
