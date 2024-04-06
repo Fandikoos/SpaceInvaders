@@ -29,7 +29,7 @@ public class RenderManager implements Disposable {
     }
 
     private void drawPlayer(){
-        spriteManager.player.draw(batch, 0.4f);
+        spriteManager.player.draw(batch, 1.5f);
     }
 
     private void drawMissile(){
@@ -40,7 +40,7 @@ public class RenderManager implements Disposable {
 
     private void drawAsteroids(){
         for (Asteroid asteroid : spriteManager.fallAsteroids){
-            asteroid.draw(batch, 0.7f);
+            asteroid.draw(batch, 1.5f);
         }
     }
 

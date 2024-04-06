@@ -8,19 +8,17 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enemy extends Character{
+public class Enemy extends Character {
 
-
-    public Enemy(Texture texture, Vector2 position) {
-        super(texture, position);
+    public Enemy(Vector2 position, String animationName) {
+        super(position, animationName);
     }
 
-    public Vector2 getPosition(){
+    public Vector2 getPosition() {
         return position;
     }
 
-    public Texture getTexture() {
-        return texture;
+    public TextureRegion getTexture() {
+        return currentFrame;
     }
-
 }

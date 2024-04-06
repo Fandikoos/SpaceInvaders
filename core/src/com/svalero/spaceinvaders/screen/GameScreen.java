@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.manager.RenderManager;
+import com.svalero.spaceinvaders.manager.ResourceManager;
 import com.svalero.spaceinvaders.manager.SpriteManager;
 
 
@@ -16,6 +17,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        ResourceManager.loadAllResources();
+        while (!ResourceManager.update()) {}
+
         MusicManager.stopMenuMusic();
         spriteManager = new SpriteManager();
         renderManager = new RenderManager(spriteManager);
