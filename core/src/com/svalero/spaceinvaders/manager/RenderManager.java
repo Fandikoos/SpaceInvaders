@@ -15,12 +15,13 @@ public class RenderManager implements Disposable {
     SpriteBatch batch;
     SpriteManager spriteManager;
     Texture background = new Texture("background/game.png");
-    HudUtils hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     boolean pause;
+    HudUtils hud;
 
 
-    public RenderManager(SpriteManager spriteManager){
+    public RenderManager(SpriteManager spriteManager, HudUtils hud){
         this.spriteManager = spriteManager;
+        this.hud = hud;
         initialize();
     }
 
@@ -49,11 +50,6 @@ public class RenderManager implements Disposable {
         spriteManager.enemies.draw(batch);
     }
 
-    private void drawHud(){
-        batch.setProjectionMatrix(hud.getProjectionMatrix());
-        hud.draw(batch);
-    }
-
     public void draw(float dt){
         if (spriteManager.pause == false){
             ScreenUtils.clear(1, 0, 0, 1);
@@ -66,7 +62,7 @@ public class RenderManager implements Disposable {
             drawEnemies(dt);
             drawAsteroids();
             drawMissile();
-            //drawHud();
+            hud.render(batch);
 
             batch.end();
         }
@@ -77,6 +73,5 @@ public class RenderManager implements Disposable {
     public void dispose() {
         batch.dispose();
         background.dispose();
-        hud.dispose();
     }
 }

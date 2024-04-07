@@ -2,6 +2,7 @@ package com.svalero.spaceinvaders.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.manager.RenderManager;
@@ -14,6 +15,7 @@ public class GameScreen implements Screen {
     Preferences prefs;
     SpriteManager spriteManager;
     RenderManager renderManager;
+    HudUtils hud = new HudUtils();
 
     @Override
     public void show() {
@@ -22,7 +24,7 @@ public class GameScreen implements Screen {
 
         MusicManager.stopMenuMusic();
         spriteManager = new SpriteManager();
-        renderManager = new RenderManager(spriteManager);
+        renderManager = new RenderManager(spriteManager, hud);
         prefs = PreferencesUtils.getPrefs();
     }
 
