@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.svalero.spaceinvaders.domain.Missile.SPEED;
+
 public class EnemyFleet {
     private List<Enemy> enemies;
     private List<Missile> missiles;
@@ -22,7 +24,6 @@ public class EnemyFleet {
     private float fleetWidth;
     private float limitFleetWidthX = 120;
     private float missileTimer;  //Temporizador para el disparo de misiles
-    private final float missileInterval = 1.5f; //Intervalo de tiempo entre cada disparo
     Preferences prefs;
     Sound shots;
 
@@ -68,6 +69,8 @@ public class EnemyFleet {
 
         missileTimer += dt;
         //Disparar un misil si el temporizador ha alcanzado el intervalo
+        //Intervalo de tiempo entre cada disparo
+        float missileInterval = 1.5f;
         if (missileTimer >= missileInterval){
             fireMissile();
             missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
@@ -77,7 +80,7 @@ public class EnemyFleet {
         // Mover y actualizar la posición de los misiles
         for (int i = 0; i < missiles.size(); i++){
             Missile missile = missiles.get(i);
-            missile.move(0, -100 * dt);
+            missile.move(0, -SPEED * dt);
             // Eliminamos el misil si sale de la pantalla
             if (missile.getPosition().y < -missile.getTexture().getHeight()){
                 missiles.remove(i);

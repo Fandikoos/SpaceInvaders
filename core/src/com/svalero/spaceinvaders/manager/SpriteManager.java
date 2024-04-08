@@ -182,9 +182,10 @@ public class SpriteManager implements Disposable {
                 asteroid.update(dt);
             }
 
+            boss.fireMissile(dt);
+            moveMissilesBoss(dt);
 
-
-            handlePlayerCollision();
+            handlePlayerCollisionBoss();
             handlePlayerCollisionWithAsteroid();
         }
 
@@ -199,6 +200,41 @@ public class SpriteManager implements Disposable {
             spawnAsteroids();
             asteroidTimer=0;
             asteroidInterval = MathUtils.random(5, 10);
+        }
+    }
+
+    private void moveMissilesBoss(float dt) {
+        Iterator<Missile> missileIterator = boss.getMissiles().iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+            missile.move(0, -Missile.SPEED * dt);
+
+            // Si el misil sale de la pantalla, quítalo
+            if (missile.getPosition().y < 0 || missile.getPosition().y > Gdx.graphics.getHeight()) {
+                missileIterator.remove();
+            }
+        }
+    }
+
+    private void handlePlayerCollisionBoss() {
+        Rectangle playerBounds = player.getBounds();
+
+        Iterator<Missile> missileIterator = boss.getMissiles().iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+            Rectangle missileBounds = missile.getBounds();
+
+            if (playerBounds.overlaps(missileBounds)) {
+                missileIterator.remove();
+                player.reduceLife();
+                player.decreaseScore(10);
+                System.out.println(player.score);
+
+                if (player.lives == 0){
+                    explosion.play();
+                    player.die();
+                }
+            }
         }
     }
 

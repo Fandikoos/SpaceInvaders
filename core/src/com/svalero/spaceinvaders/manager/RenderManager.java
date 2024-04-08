@@ -32,8 +32,14 @@ public class RenderManager implements Disposable {
         spriteManager.player.draw(batch, 1.5f);
     }
 
-    private void drawMissile(){
+    private void drawMissilePlayer(){
         for (Missile missile : spriteManager.player.getMissiles()){
+            missile.draw(batch);
+        }
+    }
+
+    private void drawMissileBoss(){
+        for (Missile missile : spriteManager.boss.getMissiles()){
             missile.draw(batch);
         }
     }
@@ -65,7 +71,7 @@ public class RenderManager implements Disposable {
             drawPlayer();
             drawEnemies(dt);
             drawAsteroids();
-            drawMissile();
+            drawMissilePlayer();
             hud.render();
 
             batch.end();
@@ -82,8 +88,9 @@ public class RenderManager implements Disposable {
 
         drawPlayer();
         drawBoss(dt);
+        drawMissileBoss();
         drawAsteroids();
-        drawMissile();
+        drawMissilePlayer();
         hud.render();
 
         batch.end();
