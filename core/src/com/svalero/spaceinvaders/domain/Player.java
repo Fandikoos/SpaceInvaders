@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.svalero.spaceinvaders.screen.EndGameScreen;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class Player extends Character{
     private final float screenHeight;
     private List<Missile> missiles;
 
-    public Player(String animationName, Vector2 vector2, float screenWidth, float screenHeight) {
-        super(new Vector2(0, 0), animationName);
+    public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
+        super(position, animationName);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.missiles = new ArrayList<>();
@@ -101,6 +102,11 @@ public class Player extends Character{
     }
 
     public void die() {
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new EndGameScreen());
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new EndGameScreen());
+            }
+        }, 1);
     }
 }

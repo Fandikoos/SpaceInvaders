@@ -2,13 +2,16 @@ package com.svalero.spaceinvaders;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.svalero.spaceinvaders.screen.BossScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
 public class SpaceInvaders extends Game {
 	
 	@Override
 	public void create () {
-		((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+		//TODO CAMBIAR CUANDO TOQUE
+		// ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+		((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen());
 	}
 
 	@Override

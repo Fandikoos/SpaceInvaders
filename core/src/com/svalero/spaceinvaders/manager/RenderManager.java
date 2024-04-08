@@ -32,8 +32,14 @@ public class RenderManager implements Disposable {
         spriteManager.player.draw(batch, 1.5f);
     }
 
-    private void drawMissile(){
+    private void drawMissilePlayer(){
         for (Missile missile : spriteManager.player.getMissiles()){
+            missile.draw(batch);
+        }
+    }
+
+    private void drawMissileBoss(){
+        for (Missile missile : spriteManager.boss.getMissiles()){
             missile.draw(batch);
         }
     }
@@ -49,6 +55,11 @@ public class RenderManager implements Disposable {
         spriteManager.enemies.draw(batch);
     }
 
+    private void drawBoss(float dt){
+        spriteManager.boss.moveBoss(dt);
+        spriteManager.boss.draw(batch, 2f);
+    }
+
     public void draw(float dt){
         if (!spriteManager.pause){
             ScreenUtils.clear(1, 0, 0, 1);
@@ -60,12 +71,29 @@ public class RenderManager implements Disposable {
             drawPlayer();
             drawEnemies(dt);
             drawAsteroids();
-            drawMissile();
+            drawMissilePlayer();
             hud.render();
 
             batch.end();
         }
 
+    }
+
+    public void drawBossScreen(float dt){
+        ScreenUtils.clear(1, 0, 0, 1);
+
+        batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
+
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        drawPlayer();
+        drawBoss(dt);
+        drawMissileBoss();
+        drawAsteroids();
+        drawMissilePlayer();
+        hud.render();
+
+        batch.end();
     }
 
     @Override

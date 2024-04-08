@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Missile {
 
+    public static float SPEED = 100;
     private Texture texture;
     private Vector2 position;
     private Rectangle bounds;
+    public static final float WIDTH = 16; // Ancho del misil en pixeles
+
 
     public Missile (Texture texture, Vector2 position) {
         this.texture = texture;

@@ -22,6 +22,7 @@ import java.util.List;
 
 public class SpriteManager implements Disposable {
 
+    public Boss boss;
     public Player player;
     boolean pause;
     private HudUtils hud;
@@ -44,6 +45,7 @@ public class SpriteManager implements Disposable {
         float screenHeigth = Gdx.graphics.getHeight();
         player = new Player("ship", new Vector2(screenWidth / 2, 60),  screenWidth, screenHeigth);
         enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
+        boss = new Boss(new Vector2(), new TextureRegion(new Texture("game/boss_1.png")) ,"boss");
         pause = false;
         shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
@@ -77,7 +79,6 @@ public class SpriteManager implements Disposable {
                     enemyIterator.remove();
                     missileIterator.remove();
                     player.increaseScore(25);
-                    System.out.println(player.score);
                 }
             }
         }
@@ -163,6 +164,35 @@ public class SpriteManager implements Disposable {
         hud.update(player);
     }
 
+    public void updateBoss(float dt){
+        if (!pause){
+            timeAsteroids(dt);
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                player.fire();
+                if (ConfigurationManager.isSoundEnabled()){
+                    shots.play();
+                }
+            }
+
+            player.manageInput();
+            player.moveMissiles();
+
+            for (Asteroid asteroid : fallAsteroids){
+                asteroid.update(dt);
+            }
+
+            boss.fireMissile(dt);
+            moveMissilesBoss(dt);
+
+            handlePlayerCollisionBoss();
+            handlePlayerCollisionWithAsteroid();
+        }
+
+        handleGameScreeninputs();
+        hud.update(player);
+    }
+
     //Temporizador asteroides
     private void timeAsteroids(float dt){
         asteroidTimer += dt;
@@ -170,6 +200,41 @@ public class SpriteManager implements Disposable {
             spawnAsteroids();
             asteroidTimer=0;
             asteroidInterval = MathUtils.random(5, 10);
+        }
+    }
+
+    private void moveMissilesBoss(float dt) {
+        Iterator<Missile> missileIterator = boss.getMissiles().iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+            missile.move(0, -Missile.SPEED * dt);
+
+            // Si el misil sale de la pantalla, quítalo
+            if (missile.getPosition().y < 0 || missile.getPosition().y > Gdx.graphics.getHeight()) {
+                missileIterator.remove();
+            }
+        }
+    }
+
+    private void handlePlayerCollisionBoss() {
+        Rectangle playerBounds = player.getBounds();
+
+        Iterator<Missile> missileIterator = boss.getMissiles().iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+            Rectangle missileBounds = missile.getBounds();
+
+            if (playerBounds.overlaps(missileBounds)) {
+                missileIterator.remove();
+                player.reduceLife();
+                player.decreaseScore(10);
+                System.out.println(player.score);
+
+                if (player.lives == 0){
+                    explosion.play();
+                    player.die();
+                }
+            }
         }
     }
 
