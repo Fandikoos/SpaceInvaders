@@ -71,9 +71,7 @@ public class EnemyFleet {
         if (missileTimer >= missileInterval){
             fireMissile();
             missileTimer = 0; // Reiniciamos el temporizador para ir a por los siguientes msiiles
-                /*if (prefs.getBoolean("sound")){
-                    shots.play();
-                }*/
+
         }
 
         // Mover y actualizar la posición de los misiles

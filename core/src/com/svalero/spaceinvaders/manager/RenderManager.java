@@ -49,6 +49,11 @@ public class RenderManager implements Disposable {
         spriteManager.enemies.draw(batch);
     }
 
+    private void drawBoss(float dt){
+        spriteManager.boss.moveBoss(dt);
+        spriteManager.boss.draw(batch, 2f);
+    }
+
     public void draw(float dt){
         if (!spriteManager.pause){
             ScreenUtils.clear(1, 0, 0, 1);
@@ -66,6 +71,22 @@ public class RenderManager implements Disposable {
             batch.end();
         }
 
+    }
+
+    public void drawBossScreen(float dt){
+        ScreenUtils.clear(1, 0, 0, 1);
+
+        batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
+
+        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        drawPlayer();
+        drawBoss(dt);
+        drawAsteroids();
+        drawMissile();
+        hud.render();
+
+        batch.end();
     }
 
     @Override

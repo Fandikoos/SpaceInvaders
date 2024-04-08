@@ -22,6 +22,7 @@ import java.util.List;
 
 public class SpriteManager implements Disposable {
 
+    public Boss boss;
     public Player player;
     boolean pause;
     private HudUtils hud;
@@ -44,6 +45,7 @@ public class SpriteManager implements Disposable {
         float screenHeigth = Gdx.graphics.getHeight();
         player = new Player("ship", new Vector2(screenWidth / 2, 60),  screenWidth, screenHeigth);
         enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
+        boss = new Boss(new Vector2(), new TextureRegion(new Texture("game/boss_1.png")) ,"boss");
         pause = false;
         shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
@@ -77,7 +79,6 @@ public class SpriteManager implements Disposable {
                     enemyIterator.remove();
                     missileIterator.remove();
                     player.increaseScore(25);
-                    System.out.println(player.score);
                 }
             }
         }
@@ -157,6 +158,34 @@ public class SpriteManager implements Disposable {
             if (enemies.getEnemies().isEmpty()){
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen());
             }
+        }
+
+        handleGameScreeninputs();
+        hud.update(player);
+    }
+
+    public void updateBoss(float dt){
+        if (!pause){
+            timeAsteroids(dt);
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+                player.fire();
+                if (ConfigurationManager.isSoundEnabled()){
+                    shots.play();
+                }
+            }
+
+            player.manageInput();
+            player.moveMissiles();
+
+            for (Asteroid asteroid : fallAsteroids){
+                asteroid.update(dt);
+            }
+
+
+
+            handlePlayerCollision();
+            handlePlayerCollisionWithAsteroid();
         }
 
         handleGameScreeninputs();
