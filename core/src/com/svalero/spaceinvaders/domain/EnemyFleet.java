@@ -138,5 +138,13 @@ public class EnemyFleet {
         return enemies;
     }
 
+    public List<Missile> getMissiles(){
+        return missiles;
+    }
+
+    public void removeMissile(Missile missile){
+        missiles.remove(missile);
+    }
+
 
 }

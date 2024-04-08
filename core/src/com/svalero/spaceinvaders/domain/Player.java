@@ -3,6 +3,7 @@ package com.svalero.spaceinvaders.domain;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Player extends Character{
     //Movimiento de la Nave
     public void manageInput(){
         float speed = 20;
-        double rightLimit = 2000.0;
+        double rightLimit = 1900.0;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rect.x < rightLimit - rect.width){
             move(speed, 0);
@@ -66,5 +67,13 @@ public class Player extends Character{
 
     public List<Missile> getMissiles() {
         return missiles;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(position.x, position.y, currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
+    }
+
+    public void die(){
+
     }
 }
