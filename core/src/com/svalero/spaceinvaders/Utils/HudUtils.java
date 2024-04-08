@@ -1,75 +1,57 @@
 package com.svalero.spaceinvaders.Utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.svalero.spaceinvaders.domain.Player;
+
+
 
 public class HudUtils {
 
+    private Player player;
     private Stage stage;
-    private Viewport viewport;
-    private BitmapFont font;
-    private int lives;
-    private int score;
-    private int level;
-    private Texture heartTexture;
-    private Texture scoreTexture;
+    private Label livesLabel;
+    private Label scoreLabel;
+    private Label levelLabel;
 
-    public HudUtils(Viewport viewport){
-        this.viewport = viewport;
-        this.stage = new Stage(viewport);
-        this.font = FontUtils.generateFont(12);
-        this.lives = 3;
-        this.score = 0;
-        this.level = 1;
+    public HudUtils(Viewport viewport, Player player) {
+        this.player = player;
+        stage = new Stage(viewport);
 
-        this.heartTexture = new Texture("hud/heart.png");
-        this.scoreTexture = new Texture("hud/score.png");
+        livesLabel = new Label("Lives: " + player.lives, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        livesLabel.setPosition(20, Gdx.graphics.getHeight() - 20);
+        stage.addActor(livesLabel);
+
+        scoreLabel = new Label("Score: " + player.score, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 50);
+        stage.addActor(scoreLabel);
+
+        levelLabel = new Label("Level: " + player.level, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        levelLabel.setPosition(20, Gdx.graphics.getHeight() - 80);
+        stage.addActor(levelLabel);
     }
 
-    public void draw(SpriteBatch batch){
-        batch.begin();
-        float y = Gdx.graphics.getHeight() - 10;
-        float x = 10;
-
-        for (int i = 0; i <lives; i++){
-            batch.draw(heartTexture, x + i * (heartTexture.getWidth() + 5), y - heartTexture.getHeight());
-        }
-        float averageY = (10 + heartTexture.getHeight() + 100) / 2f;
-
-        batch.draw(scoreTexture, x, y - heartTexture.getHeight() - scoreTexture.getHeight());
-        float scoreY = y - heartTexture.getHeight() - (scoreTexture.getHeight() - font.getLineHeight()) / 2;
-        font.draw(batch, Integer.toString(score), x + scoreTexture.getWidth() + 5, scoreY);
-
-        font.draw(batch, "Nivel actual: " + level, x, y - heartTexture.getHeight() - scoreTexture.getHeight() - font.getLineHeight());
-
-        batch.end();
+    public void update(Player player) {
+        livesLabel.setText("Lives: " + player.lives);
+        scoreLabel.setText("Score: " + player.score);
+        levelLabel.setText("Level: " + player.level);
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+    public void render() {
+        stage.act();
+        stage.draw();
     }
 
     public void dispose() {
         stage.dispose();
-        heartTexture.dispose();
-        scoreTexture.dispose();
-        font.dispose();
-    }
-
-    public Matrix4 getProjectionMatrix() {
-        return stage.getCamera().combined;
     }
 }

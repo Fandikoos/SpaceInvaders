@@ -2,11 +2,16 @@ package com.svalero.spaceinvaders.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
+import com.svalero.spaceinvaders.domain.Player;
 import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.manager.RenderManager;
 import com.svalero.spaceinvaders.manager.ResourceManager;
 import com.svalero.spaceinvaders.manager.SpriteManager;
+
 
 
 public class GameScreen implements Screen {
@@ -14,6 +19,9 @@ public class GameScreen implements Screen {
     Preferences prefs;
     SpriteManager spriteManager;
     RenderManager renderManager;
+    Player player;
+    HudUtils hud;
+
 
     @Override
     public void show() {
@@ -21,8 +29,10 @@ public class GameScreen implements Screen {
         while (!ResourceManager.update()) {}
 
         MusicManager.stopMenuMusic();
-        spriteManager = new SpriteManager();
-        renderManager = new RenderManager(spriteManager);
+        player = new Player("ship", new Vector2(Gdx.graphics.getWidth() / 2, 60), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), player);
+        spriteManager = new SpriteManager(player, hud);
+        renderManager = new RenderManager(spriteManager, hud);
         prefs = PreferencesUtils.getPrefs();
     }
 
@@ -32,6 +42,7 @@ public class GameScreen implements Screen {
 
         spriteManager.update(dt);
         renderManager.draw(dt);
+        hud.update(player);
 
     }
 

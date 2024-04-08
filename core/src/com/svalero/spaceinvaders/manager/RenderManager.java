@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.Asteroid;
 import com.svalero.spaceinvaders.domain.Missile;
@@ -15,12 +14,13 @@ public class RenderManager implements Disposable {
     SpriteBatch batch;
     SpriteManager spriteManager;
     Texture background = new Texture("background/game.png");
-    HudUtils hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     boolean pause;
+    HudUtils hud;
 
 
-    public RenderManager(SpriteManager spriteManager){
+    public RenderManager(SpriteManager spriteManager, HudUtils hud){
         this.spriteManager = spriteManager;
+        this.hud = hud;
         initialize();
     }
 
@@ -49,13 +49,8 @@ public class RenderManager implements Disposable {
         spriteManager.enemies.draw(batch);
     }
 
-    private void drawHud(){
-        batch.setProjectionMatrix(hud.getProjectionMatrix());
-        hud.draw(batch);
-    }
-
     public void draw(float dt){
-        if (spriteManager.pause == false){
+        if (!spriteManager.pause){
             ScreenUtils.clear(1, 0, 0, 1);
 
             batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
@@ -66,7 +61,7 @@ public class RenderManager implements Disposable {
             drawEnemies(dt);
             drawAsteroids();
             drawMissile();
-            //drawHud();
+            hud.render();
 
             batch.end();
         }
@@ -77,6 +72,5 @@ public class RenderManager implements Disposable {
     public void dispose() {
         batch.dispose();
         background.dispose();
-        hud.dispose();
     }
 }
