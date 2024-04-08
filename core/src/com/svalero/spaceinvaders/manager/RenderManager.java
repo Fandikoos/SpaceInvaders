@@ -50,7 +50,7 @@ public class RenderManager implements Disposable {
     }
 
     public void draw(float dt){
-        if (spriteManager.pause == false){
+        if (!spriteManager.pause){
             ScreenUtils.clear(1, 0, 0, 1);
 
             batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
@@ -61,7 +61,7 @@ public class RenderManager implements Disposable {
             drawEnemies(dt);
             drawAsteroids();
             drawMissile();
-            hud.render(batch);
+            hud.render();
 
             batch.end();
         }

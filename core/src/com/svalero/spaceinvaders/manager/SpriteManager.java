@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
@@ -21,18 +22,20 @@ import java.util.List;
 
 public class SpriteManager implements Disposable {
 
-    Player player;
+    public Player player;
     boolean pause;
+    private HudUtils hud;
     public List<Asteroid> fallAsteroids;
     private float asteroidTimer;
     private float asteroidInterval;
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
-    HudUtils hud;
 
 
-    public SpriteManager(){
+    public SpriteManager(Player player, HudUtils hud){
+        this.player = player;
+        this.hud = hud;
         initialize();
     }
 
@@ -47,9 +50,6 @@ public class SpriteManager implements Disposable {
         fallAsteroids = new ArrayList<>();
         asteroidTimer = 0;
         asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
-        hud = new HudUtils();
-        hud.lives = 3;
-        hud.score = 0;
     }
 
     private void spawnAsteroids() {
@@ -160,6 +160,7 @@ public class SpriteManager implements Disposable {
         }
 
         handleGameScreeninputs();
+        hud.update(player);
     }
 
     //Temporizador asteroides

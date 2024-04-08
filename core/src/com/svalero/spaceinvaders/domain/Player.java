@@ -16,6 +16,7 @@ public class Player extends Character{
 
     public int lives;
     public int score;
+    public int level;
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
@@ -27,6 +28,7 @@ public class Player extends Character{
         this.missiles = new ArrayList<>();
         this.lives = 3;
         this.score = 0;
+        this.level = 1;
     }
 
     //Movimiento de la Nave
