@@ -1,10 +1,12 @@
 package com.svalero.spaceinvaders.domain;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.svalero.spaceinvaders.screen.EndGameScreen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +14,7 @@ import java.util.List;
 
 public class Player extends Character{
 
+    public int lives;
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
@@ -21,6 +24,7 @@ public class Player extends Character{
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.missiles = new ArrayList<>();
+        this.lives = 3;
     }
 
     //Movimiento de la Nave
@@ -73,7 +77,11 @@ public class Player extends Character{
         return new Rectangle(position.x, position.y, currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
     }
 
-    public void die(){
+    public void reduceLife() {
+        this.lives--;
+    }
 
+    public void die() {
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new EndGameScreen());
     }
 }
