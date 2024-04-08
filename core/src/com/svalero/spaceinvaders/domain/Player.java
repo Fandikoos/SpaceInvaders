@@ -15,6 +15,7 @@ import java.util.List;
 public class Player extends Character{
 
     public int lives;
+    public int score;
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
@@ -25,6 +26,7 @@ public class Player extends Character{
         this.screenHeight = screenHeight;
         this.missiles = new ArrayList<>();
         this.lives = 3;
+        this.score = 0;
     }
 
     //Movimiento de la Nave
@@ -79,6 +81,21 @@ public class Player extends Character{
 
     public void reduceLife() {
         this.lives--;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void increaseScore(int points) {
+        this.score += points;
+    }
+
+    public void decreaseScore(int points) {
+        this.score -= points;
+        if (this.score < 0) {
+            this.score = 0; // Para que la puntuación nunca negativa
+        }
     }
 
     public void die() {

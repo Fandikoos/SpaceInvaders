@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
-import com.svalero.spaceinvaders.screen.EndGameScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
 import java.util.ArrayList;
@@ -77,6 +76,8 @@ public class SpriteManager implements Disposable {
                     // Eliminamos al enemigo y al misil
                     enemyIterator.remove();
                     missileIterator.remove();
+                    player.increaseScore(25);
+                    System.out.println(player.score);
                 }
             }
         }
@@ -93,6 +94,8 @@ public class SpriteManager implements Disposable {
             if (playerBounds.overlaps(missileBounds)) {
                 missileIterator.remove();
                 player.reduceLife();
+                player.decreaseScore(10);
+                System.out.println(player.score);
 
                 if (player.lives == 0){
                     explosion.play();
