@@ -1,10 +1,13 @@
 package com.svalero.spaceinvaders.domain;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.svalero.spaceinvaders.screen.WinnerGameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ public class Boss extends Enemy{
     private List<Missile> missiles;
     private float missileTimer;
     public boolean isRegenerating;
+    public boolean resize;
     private float movementTimer; // Temporizador para cambiar la dirección de movimiento
     private float movementInterval;  // Intervalo de tiempo para cambiar la dirección
     private Vector2 velocity;
@@ -23,8 +27,10 @@ public class Boss extends Enemy{
     public Boss(Vector2 position, TextureRegion textureRegion, String animationName) {
         super(position, animationName);
         this.textureRegion = textureRegion;
-        health = 100;
+        health = 200;
         isRegenerating = false;
+        resize = false;
+
         movementTimer = 0;
         movementInterval = MathUtils.random(3);
 
@@ -33,7 +39,7 @@ public class Boss extends Enemy{
 
         if (textureRegion != null){
             float bossX = (Gdx.graphics.getWidth() - textureRegion.getRegionWidth()) / 2;
-            float bossY = (Gdx.graphics.getHeight()) - (textureRegion.getRegionHeight() * 2);
+            float bossY = (Gdx.graphics.getHeight()) - (textureRegion.getRegionHeight() * 2.5f);
             this.getPosition().set(bossX, bossY);
         }
     }
@@ -48,7 +54,7 @@ public class Boss extends Enemy{
 
     public void reduceHealthBoss(int damage){
         health -= damage;
-        if (health < 25 && !isRegenerating){
+        if (health == 100 && !isRegenerating && !resize){
             isRegenerating = true;
             regenerate();
         }
@@ -58,10 +64,21 @@ public class Boss extends Enemy{
         // Aumentamos la salud del boss como si se regenerara vida
         health += 25;
         resizeBoss();
+        resize = true;
     }
 
     private void resizeBoss() {
         // Se hace mas grande el boss
+        if (resize){
+            float newResizeBoss = 3f;
+            setScale(newResizeBoss);
+        }
+
+    }
+
+    private void setScale (float scale){
+        textureRegion.setRegionWidth((int) (textureRegion.getRegionWidth() * scale));
+        textureRegion.setRegionHeight((int) (textureRegion.getRegionHeight() * scale));
     }
 
     public void fireMissile(float dt){
@@ -129,5 +146,18 @@ public class Boss extends Enemy{
 
     public List<Missile> getMissiles(){
         return missiles;
+    }
+
+    public void dieBoss(){
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                ((Game) Gdx.app.getApplicationListener()).setScreen(new WinnerGameScreen());
+            }
+        }, 1);
+    }
+
+    public int getHealth(){
+        return health;
     }
 }
