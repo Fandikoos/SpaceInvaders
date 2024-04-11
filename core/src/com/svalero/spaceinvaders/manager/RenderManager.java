@@ -62,7 +62,13 @@ public class RenderManager implements Disposable {
         if (spriteManager.boss.resize){
             bossScale = 3f;
         }
-
+        if (spriteManager.boss.shieldActive) {
+            // Actualización del escudo
+            spriteManager.boss.updateShield(dt);
+            batch.draw(spriteManager.boss.shieldTexture,
+                    spriteManager.boss.getPosition().x,
+                    spriteManager.boss.getPosition().y);
+        }
     }
 
     public void draw(float dt){
