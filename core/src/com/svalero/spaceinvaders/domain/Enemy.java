@@ -26,4 +26,5 @@ public class Enemy extends Character {
     public Rectangle getBounds(){
         return new Rectangle(position.x, position.y, currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
     }
+
 }

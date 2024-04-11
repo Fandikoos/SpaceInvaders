@@ -16,6 +16,7 @@ public class RenderManager implements Disposable {
     Texture background = new Texture("background/game.png");
     boolean pause;
     HudUtils hud;
+    private float bossScale = 2f;
 
 
     public RenderManager(SpriteManager spriteManager, HudUtils hud){
@@ -57,7 +58,17 @@ public class RenderManager implements Disposable {
 
     private void drawBoss(float dt){
         spriteManager.boss.moveBoss(dt);
-        spriteManager.boss.draw(batch, 2f);
+        spriteManager.boss.draw(batch, bossScale);
+        if (spriteManager.boss.resize){
+            bossScale = 3f;
+        }
+        if (spriteManager.boss.shieldActive) {
+            // Actualización del escudo
+            spriteManager.boss.updateShield(dt);
+            batch.draw(spriteManager.boss.shieldTexture,
+                    spriteManager.boss.getPosition().x,
+                    spriteManager.boss.getPosition().y);
+        }
     }
 
     public void draw(float dt){

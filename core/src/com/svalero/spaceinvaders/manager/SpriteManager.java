@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
@@ -80,6 +79,32 @@ public class SpriteManager implements Disposable {
                     missileIterator.remove();
                     player.increaseScore(25);
                 }
+            }
+        }
+    }
+
+    private void handlePlayerMissileCollisionBoss(){
+        Iterator<Missile> missileIterator = player.getMissiles().iterator();
+        while (missileIterator.hasNext()) {
+            Missile missile = missileIterator.next();
+            Rectangle playerMissileBounds = missile.getBounds();
+
+            Rectangle bossBound = boss.getBounds();
+
+            // Comprobamos si hay colisión entre el misil del jugador y el boss
+            if (bossBound.overlaps(playerMissileBounds)) {
+                boss.reduceHealthBoss(25);
+                System.out.println(boss.health);
+
+                if (boss.health <= 0) {
+                    boss.dieBoss();
+                }
+
+                // Remueve el misil después de golpear al jefe
+                missileIterator.remove();
+
+                // Sal del bucle una vez que un misil haya impactado
+                break;
             }
         }
     }
@@ -185,8 +210,11 @@ public class SpriteManager implements Disposable {
             boss.fireMissile(dt);
             moveMissilesBoss(dt);
 
+
             handlePlayerCollisionBoss();
+            handlePlayerMissileCollisionBoss();
             handlePlayerCollisionWithAsteroid();
+
         }
 
         handleGameScreeninputs();
@@ -228,7 +256,6 @@ public class SpriteManager implements Disposable {
                 missileIterator.remove();
                 player.reduceLife();
                 player.decreaseScore(10);
-                System.out.println(player.score);
 
                 if (player.lives == 0){
                     explosion.play();
