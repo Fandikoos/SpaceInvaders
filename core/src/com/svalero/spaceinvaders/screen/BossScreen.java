@@ -3,19 +3,14 @@ package com.svalero.spaceinvaders.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.domain.Boss;
 import com.svalero.spaceinvaders.domain.Player;
-import com.svalero.spaceinvaders.manager.MusicManager;
-import com.svalero.spaceinvaders.manager.RenderManager;
-import com.svalero.spaceinvaders.manager.ResourceManager;
-import com.svalero.spaceinvaders.manager.SpriteManager;
+import com.svalero.spaceinvaders.manager.*;
 
 
 public class BossScreen implements Screen {

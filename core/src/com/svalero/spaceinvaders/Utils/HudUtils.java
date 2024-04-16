@@ -50,9 +50,16 @@ public class HudUtils {
     }
 
     public void update(Player player) {
-        livesLabel.setText("Lives: " + player.lives);
-        scoreLabel.setText("Score: " + player.score);
-        levelLabel.setText("Level: " + player.level);
+        if (player != null){
+            this.player = player;
+            livesLabel.setText("Lives: " + player.lives);
+            scoreLabel.setText("Score: " + player.score);
+            levelLabel.setText("Level: " + player.level);
+        }
+    }
+
+    public Stage getStage(){
+        return stage;
     }
 
     public void render() {
