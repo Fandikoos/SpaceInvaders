@@ -7,11 +7,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.domain.Player;
-import com.svalero.spaceinvaders.manager.MusicManager;
-import com.svalero.spaceinvaders.manager.RenderManager;
-import com.svalero.spaceinvaders.manager.ResourceManager;
-import com.svalero.spaceinvaders.manager.SpriteManager;
-
+import com.svalero.spaceinvaders.manager.*;
 
 
 public class GameScreen implements Screen {

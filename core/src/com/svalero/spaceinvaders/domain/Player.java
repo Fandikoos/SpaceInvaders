@@ -3,10 +3,12 @@ package com.svalero.spaceinvaders.domain;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.screen.EndGameScreen;
 
 import java.util.ArrayList;
@@ -21,15 +23,17 @@ public class Player extends Character{
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
+    Preferences prefs;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
         super(position, animationName);
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.missiles = new ArrayList<>();
-        this.lives = 3;
-        this.score = 0;
-        this.level = 1;
+        prefs = PreferencesUtils.getPrefs();
+        lives = 3;
+        score = 0;
+        level = 1;
     }
 
     //Movimiento de la Nave
@@ -84,6 +88,8 @@ public class Player extends Character{
 
     public void reduceLife() {
         this.lives--;
+        prefs.putInteger("lives", this.lives);
+        prefs.flush(); // Guardar
     }
 
     public int getScore() {
@@ -92,6 +98,8 @@ public class Player extends Character{
 
     public void increaseScore(int points) {
         this.score += points;
+        prefs.putInteger("score", this.score);
+        prefs.flush(); // Guardar
     }
 
     public void decreaseScore(int points) {
@@ -108,5 +116,17 @@ public class Player extends Character{
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new EndGameScreen());
             }
         }, 1);
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

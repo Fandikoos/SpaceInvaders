@@ -181,7 +181,8 @@ public class SpriteManager implements Disposable {
             handlePlayerCollisionWithAsteroid();
 
             if (enemies.getEnemies().isEmpty()){
-                ((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen());
+                Game game = (Game) Gdx.app.getApplicationListener();
+                game.setScreen(new BossScreen());
             }
         }
 

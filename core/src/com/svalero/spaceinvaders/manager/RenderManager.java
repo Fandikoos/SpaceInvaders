@@ -93,7 +93,7 @@ public class RenderManager implements Disposable {
     public void drawBossScreen(float dt){
         ScreenUtils.clear(1, 0, 0, 1);
 
-        batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
+        batch.begin();
 
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
