@@ -2,6 +2,7 @@ package com.svalero.spaceinvaders.domain;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
@@ -29,11 +30,20 @@ public class Boss extends Enemy{
     private boolean shieldTimerActive;
     private float shieldTimer;
     private static final float SHIELD_DURATION = 6f;
+    Preferences prefs;
 
     public Boss(Vector2 position, TextureRegion textureRegion, String animationName) {
         super(position, animationName);
         this.textureRegion = textureRegion;
-        health = 200;
+        prefs = Gdx.app.getPreferences("SpaceInvaders");
+        String difficulty = prefs.getString("difficulty", "low"); // Obtener la dificultad guardada
+
+        if (difficulty.equals("low")) {
+            health = 200; // Establecer vida para dificultad baja
+        } else {
+            health = 300; // Establecer vida para dificultad alta
+        }
+
         isRegenerating = false;
         resize = false;
 
@@ -134,7 +144,7 @@ public class Boss extends Enemy{
 
     private void regenerate() {
         // Aumentamos la salud del boss como si se regenerara vida
-        health += 25;
+        health += 50;
         resizeBoss();
         resize = true;
     }
@@ -144,16 +154,6 @@ public class Boss extends Enemy{
         if (resize){
             float newResizeBoss = 3f;
             setScale(newResizeBoss);
-        }
-    }
-
-    public void drawShield(SpriteBatch batch, float scale) {
-        // Dibuja el jefe
-        super.draw(batch, scale);
-
-        // Si el escudo está activo, dibújalo
-        if (shieldActive) {
-            batch.draw(shieldTexture, getPosition().x, getPosition().y);
         }
     }
 

@@ -65,7 +65,7 @@ public class PreferenceScreen implements Screen {
         difficultyLabel.setColor(Color.WHITE);
         difficultyLabel.setStyle(new Label.LabelStyle(FontUtils.generateFont(24), Color.WHITE)); // Aplicar estilo de fuente
 
-        String[] resolutionsArray = {LOW, MEDIUM, HARD};
+        String[] resolutionsArray = {LOW, HARD};
         final VisList difficultyList = new VisList();
         difficultyList.setItems(resolutionsArray);
         difficultyList.setColor(Color.WHITE);
@@ -76,15 +76,15 @@ public class PreferenceScreen implements Screen {
                 switch (difficultyList.getSelectedIndex()) {
                     case 0:
                         ConfigurationManager.setDifficulty(LOW);
+                        prefs.putString("difficulty", "low");
                         break;
                     case 1:
-                        ConfigurationManager.setDifficulty(MEDIUM);
-                        break;
-                    case 2:
                         ConfigurationManager.setDifficulty(HARD);
+                        prefs.putString("difficulty", "hard");
                         break;
                     default:
                 }
+                prefs.flush();
             }
         });
 

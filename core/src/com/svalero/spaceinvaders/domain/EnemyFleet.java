@@ -36,10 +36,22 @@ public class EnemyFleet {
         float shipHeight = texture.getHeight();
         float spaceBetweenShips = 5;
 
-        int rows = 3;
-        int cols = 6;
+        int rows;
+        int cols;
+
+        String difficulty = prefs.getString("difficulty", "low");
+        // Dificultad baja
+        if (difficulty.equals("low")) {
+            rows = 3;
+            cols = 5;
+        } else {
+            //Dificultad alta
+            rows = 3;
+            cols = 7;
+        }
+
         float startX = (screenWidth - (cols * (shipWidth + spaceBetweenShips))) / 2;
-        float startY = screenHeight - screenHeight / 4; // Ajusta la posición vertical según sea necesario
+        float startY = screenHeight - screenHeight / 4; // Ajustamos la posición vertical según sea necesario
 
         for (int row = 0; row < rows; row++){
             for (int col = 0; col < cols; col++){
@@ -68,7 +80,7 @@ public class EnemyFleet {
         checkBounds(screenWidth);
 
         missileTimer += dt;
-        //Disparar un misil si el temporizador ha alcanzado el intervalo
+        //Disparamos un misil si el temporizador ha alcanzado el intervalo
         //Intervalo de tiempo entre cada disparo
         float missileInterval = 1.5f;
         if (missileTimer >= missileInterval){
@@ -77,14 +89,17 @@ public class EnemyFleet {
 
         }
 
-        // Mover y actualizar la posición de los misiles
-        for (int i = 0; i < missiles.size(); i++){
-            Missile missile = missiles.get(i);
-            missile.move(0, -SPEED * dt);
-            // Eliminamos el misil si sale de la pantalla
-            if (missile.getPosition().y < -missile.getTexture().getHeight()){
-                missiles.remove(i);
-                i--;  //Decrementamos el índice con el misil eliminado
+        // Verificamlos si la lista de enemigos no está vacía antes de actualizarla para que no salte el error
+        if (!enemies.isEmpty()) {
+            // Movemos y actualizamos la posición de los misiles
+            for (int i = 0; i < missiles.size(); i++){
+                Missile missile = missiles.get(i);
+                missile.move(0, -SPEED * dt);
+                // Eliminamos el misil si sale de la pantalla
+                if (missile.getPosition().y < -missile.getTexture().getHeight()){
+                    missiles.remove(i);
+                    i--;  //Decrementamos el índice con el misil eliminado
+                }
             }
         }
     }
