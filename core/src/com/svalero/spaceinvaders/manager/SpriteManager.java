@@ -46,7 +46,7 @@ public class SpriteManager implements Disposable {
         enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
         boss = new Boss(new Vector2(), new TextureRegion(new Texture("game/boss_1.png")) ,"boss");
         pause = false;
-        shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
+        shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/laser.wav"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
         fallAsteroids = new ArrayList<>();
         asteroidTimer = 0;
@@ -124,7 +124,9 @@ public class SpriteManager implements Disposable {
                 System.out.println(player.score);
 
                 if (player.lives == 0){
-                    explosion.play();
+                    if (ConfigurationManager.isSoundEnabled()){
+                        explosion.play();
+                    }
                     player.die();
                 }
             }
@@ -141,7 +143,9 @@ public class SpriteManager implements Disposable {
 
             if (playerBounds.overlaps(asteroidBounds)) {
                 asteroidIterator.remove();
-                explosion.play();
+                if (ConfigurationManager.isSoundEnabled()){
+                    explosion.play();
+                }
                 player.die();
             }
         }
@@ -151,6 +155,7 @@ public class SpriteManager implements Disposable {
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+            MusicManager.stopGameMusic();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {

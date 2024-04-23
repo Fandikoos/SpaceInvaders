@@ -4,11 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
+import com.svalero.spaceinvaders.manager.ConfigurationManager;
+import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.screen.EndGameScreen;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class Player extends Character{
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
+    Sound explosionForLive;
     Preferences prefs;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
@@ -34,6 +38,8 @@ public class Player extends Character{
         lives = 3;
         score = 0;
         level = 1;
+        explosionForLive = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion_light.wav"));
+
     }
 
     //Movimiento de la Nave
@@ -90,6 +96,9 @@ public class Player extends Character{
         this.lives--;
         prefs.putInteger("lives", this.lives);
         prefs.flush(); // Guardar
+        if (ConfigurationManager.isSoundEnabled()){
+            explosionForLive.play();
+        }
     }
 
     public int getScore() {
@@ -114,6 +123,7 @@ public class Player extends Character{
             @Override
             public void run() {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new EndGameScreen());
+                MusicManager.stopGameMusic();
             }
         }, 1);
     }

@@ -30,6 +30,12 @@ public class GameScreen implements Screen {
         spriteManager = new SpriteManager(player, hud);
         renderManager = new RenderManager(spriteManager, hud);
         prefs = PreferencesUtils.getPrefs();
+
+        if (prefs.getBoolean("sound")){
+            MusicManager.playGameMusic();
+        } else {
+            MusicManager.stopGameMusic();
+        }
     }
 
 

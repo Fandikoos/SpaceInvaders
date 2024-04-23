@@ -3,11 +3,14 @@ package com.svalero.spaceinvaders.domain;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import com.svalero.spaceinvaders.manager.ConfigurationManager;
+import com.svalero.spaceinvaders.manager.MusicManager;
 import com.svalero.spaceinvaders.screen.WinnerGameScreen;
 
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ public class Boss extends Enemy{
     private boolean shieldTimerActive;
     private float shieldTimer;
     private static final float SHIELD_DURATION = 6f;
+    Sound shotBoss;
+    Sound explosionBoss;
     Preferences prefs;
 
     public Boss(Vector2 position, TextureRegion textureRegion, String animationName) {
@@ -63,6 +68,10 @@ public class Boss extends Enemy{
             float bossY = (Gdx.graphics.getHeight()) - (textureRegion.getRegionHeight() * 2.5f);
             this.getPosition().set(bossX, bossY);
         }
+
+        shotBoss = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
+        explosionBoss = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
+
     }
 
     public void moveBoss(float dt){
@@ -179,6 +188,12 @@ public class Boss extends Enemy{
             // Crea un nuevo misil y agrégalo a la lista
             missiles.add(new Missile(new Texture("game/missileEnemies.png"), new Vector2(missileX, missileY)));
 
+            if (ConfigurationManager.isSoundEnabled()){
+                float volumen = 2f;
+                long soundShot =  shotBoss.play();
+                shotBoss.setVolume(soundShot, volumen);
+            }
+
             // Reinicia el temporizador
             missileTimer = 0;
         }
@@ -202,6 +217,12 @@ public class Boss extends Enemy{
             @Override
             public void run() {
                 ((Game) Gdx.app.getApplicationListener()).setScreen(new WinnerGameScreen());
+                if (ConfigurationManager.isSoundEnabled()){
+                    float volumen = 2f;
+                    long bossDie = explosionBoss.play();
+                    explosionBoss.setVolume(bossDie, volumen);
+                }
+                MusicManager.stopGameMusic();
             }
         }, 1);
     }
