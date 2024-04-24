@@ -17,6 +17,7 @@ import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -211,6 +212,7 @@ public class SpriteManager implements Disposable {
 
             player.manageInput();
             player.moveMissiles();
+            player.updateExplosion(dt);
 
             for (Asteroid asteroid : fallAsteroids){
                 asteroid.update(dt);
@@ -218,7 +220,7 @@ public class SpriteManager implements Disposable {
 
             boss.fireMissile(dt);
             moveMissilesBoss(dt);
-
+            boss.updateExplosionBoss(dt);
 
             handlePlayerCollisionBoss();
             handlePlayerMissileCollisionBoss();

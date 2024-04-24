@@ -82,10 +82,12 @@ public class RenderManager implements Disposable {
 
             batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-            drawPlayer();
+            if (spriteManager.player.isAlive()){
+                drawPlayer();
+                drawMissilePlayer();
+            }
             drawEnemies(dt);
             drawAsteroids();
-            drawMissilePlayer();
             hud.render();
             spriteManager.player.renderExplosion(batch);
             batch.end();
@@ -100,13 +102,18 @@ public class RenderManager implements Disposable {
 
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        drawPlayer();
-        drawBoss(dt);
-        drawMissileBoss();
+        if (spriteManager.player.isAlive()){
+            drawPlayer();
+            drawMissilePlayer();
+        }
+        if (spriteManager.boss.isAlive()){
+            drawBoss(dt);
+            drawMissileBoss();
+        }
         drawAsteroids();
-        drawMissilePlayer();
         hud.render();
-
+        spriteManager.player.renderExplosion(batch);
+        spriteManager.boss.renderExplosion(batch);
         batch.end();
     }
 

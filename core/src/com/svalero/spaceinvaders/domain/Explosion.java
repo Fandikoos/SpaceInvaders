@@ -26,10 +26,17 @@ public class Explosion {
         }
     }
 
-    public void draw(SpriteBatch batch, Vector2 position) {
+    public void drawPlayer(SpriteBatch batch, Vector2 position) {
         TextureRegion currentFrame = explosionAnimation.getKeyFrame(stateTime);
         float x = position.x - currentFrame.getRegionWidth() / 2 + 20;
         float y = position.y - currentFrame.getRegionHeight() / 2 + 20;
+        batch.draw(currentFrame, x, y);
+    }
+
+    public void drawBoss(SpriteBatch batch, Vector2 position) {
+        TextureRegion currentFrame = explosionAnimation.getKeyFrame(stateTime);
+        float x = position.x - currentFrame.getRegionWidth() / 4;
+        float y = position.y - currentFrame.getRegionHeight() / 4;
         batch.draw(currentFrame, x, y);
     }
 

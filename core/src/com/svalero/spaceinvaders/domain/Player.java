@@ -32,6 +32,7 @@ public class Player extends Character{
     Preferences prefs;
     private Explosion explosion;
     private Vector2 explosionPositionShip;
+    private boolean isAlive;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
         super(position, animationName);
@@ -43,6 +44,7 @@ public class Player extends Character{
         score = 0;
         level = 1;
         explosionForLive = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion_light.wav"));
+        isAlive = true;
     }
 
     //Movimiento de la Nave
@@ -131,6 +133,11 @@ public class Player extends Character{
                 MusicManager.stopGameMusic();
             }
         }, 1);
+        isAlive = false;
+    }
+
+    public boolean isAlive(){
+        return isAlive;
     }
 
     public void updateExplosion(float dt) {
@@ -145,7 +152,7 @@ public class Player extends Character{
 
     public void renderExplosion(SpriteBatch batch) {
         if (explosion != null) {
-            explosion.draw(batch, explosionPositionShip); // Usamos la posicón de la explosion
+            explosion.drawPlayer(batch, explosionPositionShip); // Usamos la posicón de la explosion
         }
     }
 
