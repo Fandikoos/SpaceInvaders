@@ -42,6 +42,20 @@ public class Character implements Disposable {
         rect.y += y;
     }
 
+    // Método para dibujar la explosión
+    public void renderExplosion(SpriteBatch batch, Vector2 explosionPosition) {
+        if (currentFrame != null) {
+            batch.draw(currentFrame, explosionPosition.x, explosionPosition.y);
+        }
+    }
+
+    public void render(SpriteBatch batch, float scale) {
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        currentFrame = animation.getKeyFrame(stateTime, true);
+        batch.draw(currentFrame, position.x, position.y, currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
+    }
+
     @Override
     public void dispose() {
     }

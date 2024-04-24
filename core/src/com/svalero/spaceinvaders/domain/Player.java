@@ -6,12 +6,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.manager.ConfigurationManager;
 import com.svalero.spaceinvaders.manager.MusicManager;
+import com.svalero.spaceinvaders.manager.ResourceManager;
 import com.svalero.spaceinvaders.screen.EndGameScreen;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class Player extends Character{
     private List<Missile> missiles;
     Sound explosionForLive;
     Preferences prefs;
+    private Explosion explosion;
+    private Vector2 explosionPositionShip;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
         super(position, animationName);
@@ -39,7 +43,6 @@ public class Player extends Character{
         score = 0;
         level = 1;
         explosionForLive = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion_light.wav"));
-
     }
 
     //Movimiento de la Nave
@@ -119,6 +122,8 @@ public class Player extends Character{
     }
 
     public void die() {
+        explosionPositionShip = position.cpy(); // Copiamos la posición actual de la nave para hacer la explosion en la misma posición
+        explosion = new Explosion(ResourceManager.getAnimation("explosion"));
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -126,6 +131,22 @@ public class Player extends Character{
                 MusicManager.stopGameMusic();
             }
         }, 1);
+    }
+
+    public void updateExplosion(float dt) {
+        if (explosion != null) {
+            explosionPositionShip = position.cpy();  // Actualizamos la posicion de la explosion
+            explosion.update(dt);
+            if (explosion.isFinished()) {
+                die();
+            }
+        }
+    }
+
+    public void renderExplosion(SpriteBatch batch) {
+        if (explosion != null) {
+            explosion.draw(batch, explosionPositionShip); // Usamos la posicón de la explosion
+        }
     }
 
     public void setLives(int lives) {

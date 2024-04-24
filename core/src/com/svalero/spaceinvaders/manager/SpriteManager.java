@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
@@ -176,6 +178,7 @@ public class SpriteManager implements Disposable {
 
             player.manageInput();
             player.moveMissiles(); // Mover y eliminar los misiles
+            player.updateExplosion(dt);
 
             for (Asteroid asteroid : fallAsteroids){
                 asteroid.update(dt);
