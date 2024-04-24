@@ -118,13 +118,15 @@ public class EnemyFleet {
 
     private void moveRightPosition(float delta){
         float maxEnemyX = Float.MIN_VALUE;
-        for (Enemy enemy : enemies){
-            enemy.move(speedEnemiesX * delta, 0);
-            if (enemy.getPosition().x > maxEnemyX){
-                maxEnemyX = enemy.getPosition().x;
+        if (!enemies.isEmpty()) {
+            for (Enemy enemy : enemies){
+                enemy.move(speedEnemiesX * delta, 0);
+                if (enemy.getPosition().x > maxEnemyX){
+                    maxEnemyX = enemy.getPosition().x;
+                }
             }
+            fleetWidth = maxEnemyX + enemies.get(0).getTexture().getRegionWidth();
         }
-        fleetWidth = maxEnemyX + enemies.get(0).getTexture().getRegionWidth();
     }
 
     private void moveLeftPosition(float delta){

@@ -3,11 +3,14 @@ package com.svalero.spaceinvaders.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.Asteroid;
+import com.svalero.spaceinvaders.domain.Explosion;
 import com.svalero.spaceinvaders.domain.Missile;
+import com.svalero.spaceinvaders.domain.Player;
 
 public class RenderManager implements Disposable {
 
@@ -79,12 +82,14 @@ public class RenderManager implements Disposable {
 
             batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-            drawPlayer();
+            if (spriteManager.player.isAlive()){
+                drawPlayer();
+                drawMissilePlayer();
+            }
             drawEnemies(dt);
             drawAsteroids();
-            drawMissilePlayer();
             hud.render();
-
+            spriteManager.player.renderExplosion(batch);
             batch.end();
         }
 
@@ -97,13 +102,18 @@ public class RenderManager implements Disposable {
 
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        drawPlayer();
-        drawBoss(dt);
-        drawMissileBoss();
+        if (spriteManager.player.isAlive()){
+            drawPlayer();
+            drawMissilePlayer();
+        }
+        if (spriteManager.boss.isAlive()){
+            drawBoss(dt);
+            drawMissileBoss();
+        }
         drawAsteroids();
-        drawMissilePlayer();
         hud.render();
-
+        spriteManager.player.renderExplosion(batch);
+        spriteManager.boss.renderExplosion(batch);
         batch.end();
     }
 

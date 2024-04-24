@@ -44,6 +44,9 @@ public class WinnerGameScreen implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
         // Label con el mensaje de victoria
+        Label winnerfirstLabel = new Label("¡¡HAS GANADO!!", labelStyle);
+        table.add(winnerfirstLabel).center().padBottom(50).row();
+
         Label winnerLabel = new Label("¡¡HAS DERROTADO A LA FLOTA ENEMIGA!!", labelStyle);
         table.add(winnerLabel).center().padBottom(50).row();
 

@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +49,7 @@ public class SpriteManager implements Disposable {
         enemies = new EnemyFleet(new Texture("game/enemy.png"), screenWidth, screenHeigth);
         boss = new Boss(new Vector2(), new TextureRegion(new Texture("game/boss_1.png")) ,"boss");
         pause = false;
-        shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/shot.mp3"));
+        shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/laser.wav"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
         fallAsteroids = new ArrayList<>();
         asteroidTimer = 0;
@@ -124,7 +127,9 @@ public class SpriteManager implements Disposable {
                 System.out.println(player.score);
 
                 if (player.lives == 0){
-                    explosion.play();
+                    if (ConfigurationManager.isSoundEnabled()){
+                        explosion.play();
+                    }
                     player.die();
                 }
             }
@@ -141,7 +146,9 @@ public class SpriteManager implements Disposable {
 
             if (playerBounds.overlaps(asteroidBounds)) {
                 asteroidIterator.remove();
-                explosion.play();
+                if (ConfigurationManager.isSoundEnabled()){
+                    explosion.play();
+                }
                 player.die();
             }
         }
@@ -151,6 +158,7 @@ public class SpriteManager implements Disposable {
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+            MusicManager.stopGameMusic();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -171,6 +179,7 @@ public class SpriteManager implements Disposable {
 
             player.manageInput();
             player.moveMissiles(); // Mover y eliminar los misiles
+            player.updateExplosion(dt);
 
             for (Asteroid asteroid : fallAsteroids){
                 asteroid.update(dt);
@@ -203,6 +212,7 @@ public class SpriteManager implements Disposable {
 
             player.manageInput();
             player.moveMissiles();
+            player.updateExplosion(dt);
 
             for (Asteroid asteroid : fallAsteroids){
                 asteroid.update(dt);
@@ -210,7 +220,7 @@ public class SpriteManager implements Disposable {
 
             boss.fireMissile(dt);
             moveMissilesBoss(dt);
-
+            boss.updateExplosionBoss(dt);
 
             handlePlayerCollisionBoss();
             handlePlayerMissileCollisionBoss();
