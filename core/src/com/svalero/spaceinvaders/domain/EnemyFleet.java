@@ -160,9 +160,4 @@ public class EnemyFleet {
         return missiles;
     }
 
-    public void removeMissile(Missile missile){
-        missiles.remove(missile);
-    }
-
-
 }

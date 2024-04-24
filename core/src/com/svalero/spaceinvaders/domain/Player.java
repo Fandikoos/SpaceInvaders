@@ -42,7 +42,6 @@ public class Player extends Character{
         prefs = PreferencesUtils.getPrefs();
         lives = 3;
         score = 0;
-        level = 1;
         explosionForLive = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion_light.wav"));
         isAlive = true;
     }
@@ -106,10 +105,6 @@ public class Player extends Character{
         }
     }
 
-    public int getScore() {
-        return score;
-    }
-
     public void increaseScore(int points) {
         this.score += points;
         prefs.putInteger("score", this.score);
@@ -154,17 +149,5 @@ public class Player extends Character{
         if (explosion != null) {
             explosion.drawPlayer(batch, explosionPositionShip); // Usamos la posicón de la explosion
         }
-    }
-
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 }

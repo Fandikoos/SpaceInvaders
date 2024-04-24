@@ -18,7 +18,6 @@ public class HudUtils {
     private Stage stage;
     private Label livesLabel;
     private Label scoreLabel;
-    private Label levelLabel;
     private Image livesImage;
     private Image scoreImage;
 
@@ -34,9 +33,6 @@ public class HudUtils {
         scoreLabel.setPosition(50, Gdx.graphics.getHeight() - 100);
         stage.addActor(scoreLabel);
 
-        levelLabel = new Label("Level: " + player.level, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel.setPosition(50, Gdx.graphics.getHeight() - 140);
-        stage.addActor(levelLabel);
 
         TextureRegion heartImage = new TextureRegion(new Texture(Gdx.files.internal("hud/heart.png")));
         livesImage = new Image(heartImage);
@@ -54,12 +50,7 @@ public class HudUtils {
             this.player = player;
             livesLabel.setText("Lives: " + player.lives);
             scoreLabel.setText("Score: " + player.score);
-            levelLabel.setText("Level: " + player.level);
         }
-    }
-
-    public Stage getStage(){
-        return stage;
     }
 
     public void render() {
@@ -75,4 +66,6 @@ public class HudUtils {
     public void dispose() {
         stage.dispose();
     }
+
+
 }
