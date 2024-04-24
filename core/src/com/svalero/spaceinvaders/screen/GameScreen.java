@@ -28,7 +28,7 @@ public class GameScreen implements Screen {
         MusicManager.stopMenuMusic();
         player = new Player("ship", new Vector2(Gdx.graphics.getWidth() / 2, 60), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), player);
-        spriteManager = new SpriteManager(player, hud);
+        spriteManager = new SpriteManager(player, hud, this); // Con el this el sprite manager tiene acceso al metodo de swithcToBossScreen
         renderManager = new RenderManager(spriteManager, hud);
         prefs = PreferencesUtils.getPrefs();
 
@@ -49,6 +49,11 @@ public class GameScreen implements Screen {
 
     }
 
+    // Metodo para cambiar a la pantalla del Boss y pdoer mandarle el jugador actual, el hud actual, el sprite manager actual y el render manager actual
+    // importante especialmente para poder pasar la informacion del hud al siguiente niven y que asi no se reinicie la info del hud
+    public void switchToBossScreen(){
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen(player, hud, spriteManager, renderManager));
+    }
 
     @Override
     public void resize(int width, int height) {

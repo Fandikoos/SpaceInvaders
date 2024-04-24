@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
+import com.svalero.spaceinvaders.screen.GameScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
 import java.nio.file.attribute.UserPrincipal;
@@ -34,11 +35,14 @@ public class SpriteManager implements Disposable {
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
+    private GameScreen gameScreen;
 
 
-    public SpriteManager(Player player, HudUtils hud){
+    // Añadimos la gameScreen al constructor para poder cambiar de pantalla cuando no queden enemigos
+    public SpriteManager(Player player, HudUtils hud, GameScreen gameScreen){
         this.player = player;
         this.hud = hud;
+        this.gameScreen = gameScreen;
         initialize();
     }
 
@@ -98,16 +102,14 @@ public class SpriteManager implements Disposable {
             if (bossBound.overlaps(playerMissileBounds)) {
                 boss.reduceHealthBoss(25);
                 System.out.println(boss.health);
+                player.increaseScore(30);
 
                 if (boss.health <= 0) {
                     boss.dieBoss();
                 }
 
-                // Remueve el misil después de golpear al jefe
+                // Eliminamos el misil después de golpear al jefe
                 missileIterator.remove();
-
-                // Sal del bucle una vez que un misil haya impactado
-                break;
             }
         }
     }
@@ -124,7 +126,6 @@ public class SpriteManager implements Disposable {
                 missileIterator.remove();
                 player.reduceLife();
                 player.decreaseScore(10);
-                System.out.println(player.score);
 
                 if (player.lives == 0){
                     if (ConfigurationManager.isSoundEnabled()){
@@ -189,14 +190,19 @@ public class SpriteManager implements Disposable {
             handleEnemyCollisions();
             handlePlayerCollisionWithAsteroid();
 
+
             if (enemies.getEnemies().isEmpty()){
-                Game game = (Game) Gdx.app.getApplicationListener();
-                game.setScreen(new BossScreen());
+                // Metodo de la GameScreen para cambiar de nivel con toda la info acerca del player, hud, sprite manager y render manager
+                gameScreen.switchToBossScreen();
             }
         }
 
         handleGameScreeninputs();
         hud.update(player);
+    }
+
+    public Player getPlayer(){
+        return player;
     }
 
     public void updateBoss(float dt){
@@ -266,7 +272,7 @@ public class SpriteManager implements Disposable {
             if (playerBounds.overlaps(missileBounds)) {
                 missileIterator.remove();
                 player.reduceLife();
-                player.decreaseScore(10);
+                player.decreaseScore(20);
 
                 if (player.lives == 0){
                     explosion.play();

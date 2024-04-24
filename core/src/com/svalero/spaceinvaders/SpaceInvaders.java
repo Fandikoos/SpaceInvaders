@@ -11,8 +11,8 @@ public class SpaceInvaders extends Game {
 
 	@Override
 	public void create () {
-		//((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
-		((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen());
+		((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
+		//((Game) Gdx.app.getApplicationListener()).setScreen(new BossScreen());
 	}
 
 	@Override

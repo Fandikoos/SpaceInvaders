@@ -5,7 +5,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
@@ -21,8 +20,17 @@ public class BossScreen implements Screen {
     SpriteManager spriteManager;
     RenderManager renderManager;
     Player player;
-    HudUtils hud;
     Boss boss;
+    HudUtils hud;
+
+    // Constructor que toma el jugador y el HUD como parámetros
+    public BossScreen(Player player, HudUtils hud, SpriteManager spriteManager, RenderManager renderManager) {
+        this.player = player;
+        this.hud = hud;
+        this.spriteManager = spriteManager;
+        this.renderManager = renderManager;
+        prefs = PreferencesUtils.getPrefs();
+    }
 
     @Override
     public void show() {
@@ -30,19 +38,17 @@ public class BossScreen implements Screen {
         while (!ResourceManager.update()) {}
 
         MusicManager.stopMenuMusic();
-        player = new Player("ship", new Vector2(Gdx.graphics.getWidth() / 2, 60), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        hud = new HudUtils(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), player);
-        spriteManager = new SpriteManager(player, hud);
-        renderManager = new RenderManager(spriteManager, hud);
+        // No se necesita crear un nuevo jugador aquí
+        // player = new Player("ship", new Vector2(Gdx.graphics.getWidth() / 2, 60), Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //spriteManager = new SpriteManager(player, hud);
+        //renderManager = new RenderManager(spriteManager, hud);
         prefs = PreferencesUtils.getPrefs();
-
     }
 
     @Override
     public void render(float dt) {
         spriteManager.updateBoss(dt);
         renderManager.drawBossScreen(dt);
-        hud.update(player);
 
     }
 
