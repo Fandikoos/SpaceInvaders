@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.svalero.spaceinvaders.Utils.PreferencesUtils;
 import com.svalero.spaceinvaders.manager.ConfigurationManager;
 import com.svalero.spaceinvaders.manager.MusicManager;
@@ -35,6 +36,9 @@ public class Player extends Character{
     private boolean isAlive;
     public boolean doubleScoreActive;
     public float doubleScoreTimer;
+    private static final float DEFAULT_SPEED = 10;
+    private static final float INCREASED_SPEED = 25;
+    private float currentSpeed;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
         super(position, animationName);
@@ -48,11 +52,26 @@ public class Player extends Character{
         isAlive = true;
         doubleScoreTimer = 0;
         doubleScoreActive = false;
+        currentSpeed = DEFAULT_SPEED;
+    }
+
+    public void increaseSpeed() {
+        currentSpeed = INCREASED_SPEED; // Aumentamos velocidad
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                resetSpeed(); // Resetear velocidad después de 7 segundos
+            }
+        }, 7); // Duración de 7 segundos
+    }
+
+    public void resetSpeed(){
+        currentSpeed = DEFAULT_SPEED;
     }
 
     //Movimiento de la Nave
     public void manageInput(){
-        float speed = 20;
+        float speed = currentSpeed;
         double rightLimit = 1900.0;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rect.x < rightLimit - rect.width){
@@ -129,6 +148,8 @@ public class Player extends Character{
             this.score = 0; // Para que la puntuación nunca negativa
         }
     }
+
+
 
     public void die() {
         explosionPositionShip = position.cpy(); // Copiamos la posición actual de la nave para hacer la explosion en la misma posición

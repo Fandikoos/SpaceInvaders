@@ -34,11 +34,16 @@ public class SpriteManager implements Disposable {
     public List<DoubleScorePowerUp> fallDoubleScore;
     private float doubleScorePowerUpTimer;
     private float doubleScorePowerUpInterval;
+    public List<SpeedPowerUp> fallSpeedPowerUp;
+    private float speedPowerUpTimer;
+    private float speedPowerUpInterval;
+
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
     Sound addLife;
     Sound doubleScore;
+    Sound star;
     private GameScreen gameScreen;
 
 
@@ -61,15 +66,19 @@ public class SpriteManager implements Disposable {
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
         addLife = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/life.mp3"));
         doubleScore = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/coin.mp3"));
+        star = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/star.mp3"));
         fallAsteroids = new ArrayList<>();
         fallExtraLifes = new ArrayList<>();
         fallDoubleScore = new ArrayList<>();
+        fallSpeedPowerUp = new ArrayList<>();
         asteroidTimer = 0;
         asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
         lifePowerUpTimer = 0;
         lifePowerUpInterval = MathUtils.random(15, 20);
         doubleScorePowerUpTimer = 0;
         doubleScorePowerUpInterval = MathUtils.random(15, 20);
+        speedPowerUpTimer = 0;
+        speedPowerUpInterval = MathUtils.random(15, 20);
     }
 
     private void spawnAsteroids() {
@@ -91,11 +100,21 @@ public class SpriteManager implements Disposable {
     private void spawnDoubleScorePowerUp(){
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        TextureRegion doubleScoreTexture = new TextureRegion(ResourceManager.getTexture("score"));
+        TextureRegion doubleScoreTexture = new TextureRegion(ResourceManager.getTexture("coin"));
         float x = MathUtils.random(0, screenWidth - doubleScoreTexture.getRegionWidth());
         float y = screenHeight;
         float speed = 100;
         fallDoubleScore.add(new DoubleScorePowerUp(doubleScoreTexture, x, y, speed));
+    }
+
+    private void spawnSpeedPowerUp(){
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        TextureRegion speedTexture = new TextureRegion(ResourceManager.getTexture("star"));
+        float x = MathUtils.random(0, screenWidth - speedTexture.getRegionWidth());
+        float y = screenHeight;
+        float speed = 120;
+        fallSpeedPowerUp.add(new SpeedPowerUp(speedTexture, x, y, speed));
     }
 
     private void handleEnemyCollisions() {
@@ -223,6 +242,24 @@ public class SpriteManager implements Disposable {
         }
     }
 
+    private void handleCollisionWithSpeed(){
+        Rectangle playerBounds = player.getBounds();
+        Iterator<SpeedPowerUp> speedPowerUpIterator = fallSpeedPowerUp.iterator();
+
+        while (speedPowerUpIterator.hasNext()){
+            SpeedPowerUp speedPowerUp = speedPowerUpIterator.next();
+            Rectangle speedBound = speedPowerUp.getBounds();
+
+            if (playerBounds.overlaps(speedBound)){
+                speedPowerUpIterator.remove();
+                player.increaseSpeed();
+                if (ConfigurationManager.isSoundEnabled()){
+                    star.play();
+                }
+            }
+        }
+    }
+
     //Eventos de la pantalla
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -240,7 +277,7 @@ public class SpriteManager implements Disposable {
     public void update(float dt){
         if (!pause){
             timeAsteroids(dt);
-            timeLifePowerUps(dt);
+            timePowerUps(dt);
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                 player.fire();
@@ -265,11 +302,16 @@ public class SpriteManager implements Disposable {
                 powerUp.update(dt);
             }
 
+            for (SpeedPowerUp powerUp : fallSpeedPowerUp){
+                powerUp.update(dt);
+            }
+
             handlePlayerCollision();
             handleEnemyCollisions();
             handlePlayerCollisionWithAsteroid();
             handleCollisionWithExtraLife();
             handleCollisionWithDoubleScore();
+            handleCollisionWithSpeed();
 
             if (player.doubleScoreActive){
                 // Actualizamos el temporizador de doble puntuacion si está activo
@@ -295,7 +337,7 @@ public class SpriteManager implements Disposable {
     public void updateBoss(float dt){
         if (!pause){
             timeAsteroids(dt);
-            timeLifePowerUps(dt);
+            timePowerUps(dt);
 
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -321,6 +363,10 @@ public class SpriteManager implements Disposable {
                 powerUp.update(dt);
             }
 
+            for (SpeedPowerUp powerUp : fallSpeedPowerUp){
+                powerUp.update(dt);
+            }
+
             boss.fireMissile(dt);
             moveMissilesBoss(dt);
             boss.updateExplosionBoss(dt);
@@ -330,6 +376,7 @@ public class SpriteManager implements Disposable {
             handlePlayerCollisionWithAsteroid();
             handleCollisionWithExtraLife();
             handleCollisionWithDoubleScore();
+            handleCollisionWithSpeed();
 
             if (player.doubleScoreActive){
                 // Actualizamos el temporizador de doble puntuacion si está activo
@@ -357,9 +404,10 @@ public class SpriteManager implements Disposable {
         }
     }
 
-    private void timeLifePowerUps(float dt) {
+    private void timePowerUps(float dt) {
         lifePowerUpTimer += dt;
         doubleScorePowerUpTimer += dt;
+        speedPowerUpTimer += dt;
 
         if (lifePowerUpTimer >= lifePowerUpInterval){
             spawnLifePowerUp();
@@ -370,6 +418,11 @@ public class SpriteManager implements Disposable {
             spawnDoubleScorePowerUp();
             doubleScorePowerUpTimer = 0;
             doubleScorePowerUpInterval = MathUtils.random(15, 20);
+        }
+        if (speedPowerUpTimer >=  speedPowerUpInterval){
+            spawnSpeedPowerUp();
+            speedPowerUpTimer = 0;
+            speedPowerUpInterval = MathUtils.random(15, 20);
         }
     }
 

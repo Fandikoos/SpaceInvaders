@@ -58,6 +58,9 @@ public class RenderManager implements Disposable {
         for (DoubleScorePowerUp powerUp : spriteManager.fallDoubleScore){
             powerUp.draw(batch);
         }
+        for (SpeedPowerUp powerUp : spriteManager.fallSpeedPowerUp){
+            powerUp.draw(batch);
+        }
     }
 
     private void drawEnemies(float dt){

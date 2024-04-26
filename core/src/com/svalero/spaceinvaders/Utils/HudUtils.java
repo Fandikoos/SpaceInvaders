@@ -40,7 +40,7 @@ public class HudUtils {
         livesImage.setPosition(getPositionForImage(livesLabel, livesImage), livesLabel.getY() - 15);
         stage.addActor(livesImage);
 
-        TextureRegion coinImage = new TextureRegion(ResourceManager.getTexture("score"));
+        TextureRegion coinImage = new TextureRegion(ResourceManager.getTexture("coin"));
         scoreImage = new Image(coinImage);
         scoreImage.setPosition(getPositionForImage(scoreLabel, scoreImage) - 10, scoreLabel.getY() - 25);
         stage.addActor(scoreImage);
