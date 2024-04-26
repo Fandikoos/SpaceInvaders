@@ -37,6 +37,8 @@ public class SpriteManager implements Disposable {
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
+    Sound addLife;
+    Sound doubleScore;
     private GameScreen gameScreen;
 
 
@@ -57,6 +59,8 @@ public class SpriteManager implements Disposable {
         pause = false;
         shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/laser.wav"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
+        addLife = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/life.mp3"));
+        doubleScore = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/coin.mp3"));
         fallAsteroids = new ArrayList<>();
         fallExtraLifes = new ArrayList<>();
         fallDoubleScore = new ArrayList<>();
@@ -194,6 +198,9 @@ public class SpriteManager implements Disposable {
             if (playerBounds.overlaps(lifeBound)){
                 extraLifePowerUpIterator.remove();
                 player.addLife();
+                if (ConfigurationManager.isSoundEnabled()){
+                    addLife.play();
+                }
             }
         }
     }
@@ -209,6 +216,9 @@ public class SpriteManager implements Disposable {
             if (playerBounds.overlaps(doubleScoreBound)){
                 doubleScorePowerUpIterator.remove();
                 player.activateDoubleScore();
+                if (ConfigurationManager.isSoundEnabled()){
+                    doubleScore.play();
+                }
             }
         }
     }
