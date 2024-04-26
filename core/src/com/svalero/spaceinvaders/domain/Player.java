@@ -33,6 +33,8 @@ public class Player extends Character{
     private Explosion explosion;
     private Vector2 explosionPositionShip;
     private boolean isAlive;
+    public boolean doubleScoreActive;
+    public float doubleScoreTimer;
 
     public Player(String animationName, Vector2 position, float screenWidth, float screenHeight) {
         super(position, animationName);
@@ -44,6 +46,8 @@ public class Player extends Character{
         score = 0;
         explosionForLive = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion_light.wav"));
         isAlive = true;
+        doubleScoreTimer = 0;
+        doubleScoreActive = false;
     }
 
     //Movimiento de la Nave
@@ -105,10 +109,18 @@ public class Player extends Character{
         }
     }
 
+    public void activateDoubleScore(){
+        doubleScoreActive = true;
+        doubleScoreTimer = 0;
+    }
+
     public void increaseScore(int points) {
+        if (doubleScoreActive){
+            points *= 2;
+        }
         this.score += points;
-        prefs.putInteger("score", this.score);
-        prefs.flush(); // Guardar
+        //prefs.putInteger("score", this.score);
+        //prefs.flush(); Guardar
     }
 
     public void decreaseScore(int points) {

@@ -55,6 +55,9 @@ public class RenderManager implements Disposable {
         for (ExtraLifePowerUp powerUp : spriteManager.fallExtraLifes){
             powerUp.draw(batch);
         }
+        for (DoubleScorePowerUp powerUp : spriteManager.fallDoubleScore){
+            powerUp.draw(batch);
+        }
     }
 
     private void drawEnemies(float dt){
@@ -81,7 +84,7 @@ public class RenderManager implements Disposable {
         if (!spriteManager.pause){
             ScreenUtils.clear(1, 0, 0, 1);
 
-            batch.begin(); // ¡Asegúrate de llamar a batch.begin() aquí!
+            batch.begin();
 
             batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 

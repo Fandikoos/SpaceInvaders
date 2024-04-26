@@ -74,8 +74,10 @@ public class EnemyFleet {
     public void update(float dt){
         if (moveRight){
             moveRightPosition(dt);
+            checkRightEdge();
         } else {
             moveLeftPosition(dt);
+            checkLeftEdge();
         }
         checkBounds(screenWidth);
 
@@ -140,6 +142,24 @@ public class EnemyFleet {
             fleetWidth = enemies.get(0).getPosition().x + enemies.get(0).getTexture().getRegionWidth();
         }
 
+    }
+
+    private void checkRightEdge() {
+        for (Enemy enemy : enemies) {
+            if (enemy.getPosition().x + enemy.getTexture().getRegionWidth() >= screenWidth) {
+                moveRight = false; // Cambiar la dirección a izquierda
+                break; // Salir del bucle ya que solo necesitamos una nave para alcanzar el borde
+            }
+        }
+    }
+
+    private void checkLeftEdge() {
+        for (Enemy enemy : enemies) {
+            if (enemy.getPosition().x <= 0) {
+                moveRight = true; // Cambiar la dirección a derecha
+                break; // Salir del bucle ya que solo necesitamos una nave para alcanzar el borde
+            }
+        }
     }
 
     public void checkBounds(float screenWidth){

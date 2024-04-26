@@ -10,10 +10,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
-import com.svalero.spaceinvaders.screen.BossScreen;
 import com.svalero.spaceinvaders.screen.GameScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
@@ -33,6 +31,9 @@ public class SpriteManager implements Disposable {
     public List<ExtraLifePowerUp> fallExtraLifes;
     private float lifePowerUpTimer;
     private float lifePowerUpInterval;
+    public List<DoubleScorePowerUp> fallDoubleScore;
+    private float doubleScorePowerUpTimer;
+    private float doubleScorePowerUpInterval;
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
@@ -58,10 +59,13 @@ public class SpriteManager implements Disposable {
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
         fallAsteroids = new ArrayList<>();
         fallExtraLifes = new ArrayList<>();
+        fallDoubleScore = new ArrayList<>();
         asteroidTimer = 0;
         asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
         lifePowerUpTimer = 0;
-        lifePowerUpInterval = MathUtils.random(10, 20);
+        lifePowerUpInterval = MathUtils.random(15, 20);
+        doubleScorePowerUpTimer = 0;
+        doubleScorePowerUpInterval = MathUtils.random(15, 20);
     }
 
     private void spawnAsteroids() {
@@ -70,14 +74,24 @@ public class SpriteManager implements Disposable {
         fallAsteroids.add(new Asteroid(new Vector2(), new TextureRegion(new Texture("game/stone_1.png")), "stone", screenWidth, screenHeight));
     }
 
-    private void spawnPowerUps(){
+    private void spawnLifePowerUp(){
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        TextureRegion lifeTexture = new TextureRegion(new Texture("hud/heart.png"));
+        TextureRegion lifeTexture = new TextureRegion(ResourceManager.getTexture("heart"));
         float x = MathUtils.random(0, screenWidth - lifeTexture.getRegionWidth());
         float y = screenHeight;
         float speed = 80;
         fallExtraLifes.add(new ExtraLifePowerUp(lifeTexture, x, y, speed));
+    }
+
+    private void spawnDoubleScorePowerUp(){
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        TextureRegion doubleScoreTexture = new TextureRegion(ResourceManager.getTexture("score"));
+        float x = MathUtils.random(0, screenWidth - doubleScoreTexture.getRegionWidth());
+        float y = screenHeight;
+        float speed = 100;
+        fallDoubleScore.add(new DoubleScorePowerUp(doubleScoreTexture, x, y, speed));
     }
 
     private void handleEnemyCollisions() {
@@ -184,6 +198,21 @@ public class SpriteManager implements Disposable {
         }
     }
 
+    private void handleCollisionWithDoubleScore(){
+        Rectangle playerBounds = player.getBounds();
+        Iterator<DoubleScorePowerUp> doubleScorePowerUpIterator = fallDoubleScore.iterator();
+
+        while (doubleScorePowerUpIterator.hasNext()){
+            DoubleScorePowerUp doubleScorePowerUp = doubleScorePowerUpIterator.next();
+            Rectangle doubleScoreBound = doubleScorePowerUp.getBounds();
+
+            if (playerBounds.overlaps(doubleScoreBound)){
+                doubleScorePowerUpIterator.remove();
+                player.activateDoubleScore();
+            }
+        }
+    }
+
     //Eventos de la pantalla
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -222,12 +251,26 @@ public class SpriteManager implements Disposable {
                 powerUp.update(dt);
             }
 
+            for (DoubleScorePowerUp powerUp : fallDoubleScore){
+                powerUp.update(dt);
+            }
 
             handlePlayerCollision();
             handleEnemyCollisions();
             handlePlayerCollisionWithAsteroid();
             handleCollisionWithExtraLife();
+            handleCollisionWithDoubleScore();
 
+            if (player.doubleScoreActive){
+                // Actualizamos el temporizador de doble puntuacion si está activo
+                player.doubleScoreTimer += dt;
+
+                //Si pasan 10 segundo desactivar el efecto de puntos dobles
+                if (player.doubleScoreTimer >= 10){
+                    player.doubleScoreActive = false;
+                    player.doubleScoreTimer = 0;
+                }
+            }
 
             if (enemies.getEnemies().isEmpty()){
                 // Metodo de la GameScreen para cambiar de nivel con toda la info acerca del player, hud, sprite manager y render manager
@@ -237,10 +280,6 @@ public class SpriteManager implements Disposable {
 
         handleGameScreeninputs();
         hud.update(player);
-    }
-
-    public Player getPlayer(){
-        return player;
     }
 
     public void updateBoss(float dt){
@@ -268,6 +307,10 @@ public class SpriteManager implements Disposable {
                 powerUp.update(dt);
             }
 
+            for (DoubleScorePowerUp powerUp : fallDoubleScore){
+                powerUp.update(dt);
+            }
+
             boss.fireMissile(dt);
             moveMissilesBoss(dt);
             boss.updateExplosionBoss(dt);
@@ -275,7 +318,19 @@ public class SpriteManager implements Disposable {
             handlePlayerCollisionBoss();
             handlePlayerMissileCollisionBoss();
             handlePlayerCollisionWithAsteroid();
+            handleCollisionWithExtraLife();
+            handleCollisionWithDoubleScore();
 
+            if (player.doubleScoreActive){
+                // Actualizamos el temporizador de doble puntuacion si está activo
+                player.doubleScoreTimer += dt;
+
+                //Si pasan 10 segundo desactivar el efecto de puntos dobles
+                if (player.doubleScoreTimer >= 10){
+                    player.doubleScoreActive = false;
+                    player.doubleScoreTimer = 0;
+                }
+            }
         }
 
         handleGameScreeninputs();
@@ -294,10 +349,17 @@ public class SpriteManager implements Disposable {
 
     private void timeLifePowerUps(float dt) {
         lifePowerUpTimer += dt;
+        doubleScorePowerUpTimer += dt;
+
         if (lifePowerUpTimer >= lifePowerUpInterval){
-            spawnPowerUps();
+            spawnLifePowerUp();
             lifePowerUpTimer = 0;
-            lifePowerUpInterval = MathUtils.random(10, 20);
+            lifePowerUpInterval = MathUtils.random(15, 20);
+        }
+        if (doubleScorePowerUpTimer >= doubleScorePowerUpInterval){
+            spawnDoubleScorePowerUp();
+            doubleScorePowerUpTimer = 0;
+            doubleScorePowerUpInterval = MathUtils.random(15, 20);
         }
     }
 
