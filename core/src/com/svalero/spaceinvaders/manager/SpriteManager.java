@@ -9,16 +9,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.BossScreen;
 import com.svalero.spaceinvaders.screen.GameScreen;
 import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +30,9 @@ public class SpriteManager implements Disposable {
     public List<Asteroid> fallAsteroids;
     private float asteroidTimer;
     private float asteroidInterval;
+    public List<ExtraLifePowerUp> fallExtraLifes;
+    private float lifePowerUpTimer;
+    private float lifePowerUpInterval;
     EnemyFleet enemies;
     Sound shots;
     Sound explosion;
@@ -56,14 +57,27 @@ public class SpriteManager implements Disposable {
         shots = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/laser.wav"));
         explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/effects/explosion.mp3"));
         fallAsteroids = new ArrayList<>();
+        fallExtraLifes = new ArrayList<>();
         asteroidTimer = 0;
         asteroidInterval = MathUtils.random(5, 10);  //Intervalo de tiempo entre asteroide y asteroide
+        lifePowerUpTimer = 0;
+        lifePowerUpInterval = MathUtils.random(10, 20);
     }
 
     private void spawnAsteroids() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         fallAsteroids.add(new Asteroid(new Vector2(), new TextureRegion(new Texture("game/stone_1.png")), "stone", screenWidth, screenHeight));
+    }
+
+    private void spawnPowerUps(){
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        TextureRegion lifeTexture = new TextureRegion(new Texture("hud/heart.png"));
+        float x = MathUtils.random(0, screenWidth - lifeTexture.getRegionWidth());
+        float y = screenHeight;
+        float speed = 80;
+        fallExtraLifes.add(new ExtraLifePowerUp(lifeTexture, x, y, speed));
     }
 
     private void handleEnemyCollisions() {
@@ -155,6 +169,21 @@ public class SpriteManager implements Disposable {
         }
     }
 
+    private void handleCollisionWithExtraLife(){
+        Rectangle playerBounds = player.getBounds();
+        Iterator<ExtraLifePowerUp> extraLifePowerUpIterator = fallExtraLifes.iterator();
+
+        while (extraLifePowerUpIterator.hasNext()){
+            ExtraLifePowerUp extraLifePowerUp = extraLifePowerUpIterator.next();
+            Rectangle lifeBound = extraLifePowerUp.getBounds();
+
+            if (playerBounds.overlaps(lifeBound)){
+                extraLifePowerUpIterator.remove();
+                player.addLife();
+            }
+        }
+    }
+
     //Eventos de la pantalla
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -167,9 +196,12 @@ public class SpriteManager implements Disposable {
         }
     }
 
+
+
     public void update(float dt){
         if (!pause){
             timeAsteroids(dt);
+            timeLifePowerUps(dt);
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                 player.fire();
@@ -186,9 +218,15 @@ public class SpriteManager implements Disposable {
                 asteroid.update(dt);
             }
 
+            for (ExtraLifePowerUp powerUp : fallExtraLifes){
+                powerUp.update(dt);
+            }
+
+
             handlePlayerCollision();
             handleEnemyCollisions();
             handlePlayerCollisionWithAsteroid();
+            handleCollisionWithExtraLife();
 
 
             if (enemies.getEnemies().isEmpty()){
@@ -208,6 +246,8 @@ public class SpriteManager implements Disposable {
     public void updateBoss(float dt){
         if (!pause){
             timeAsteroids(dt);
+            timeLifePowerUps(dt);
+
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
                 player.fire();
@@ -222,6 +262,10 @@ public class SpriteManager implements Disposable {
 
             for (Asteroid asteroid : fallAsteroids){
                 asteroid.update(dt);
+            }
+
+            for (ExtraLifePowerUp powerUp : fallExtraLifes){
+                powerUp.update(dt);
             }
 
             boss.fireMissile(dt);
@@ -245,6 +289,15 @@ public class SpriteManager implements Disposable {
             spawnAsteroids();
             asteroidTimer=0;
             asteroidInterval = MathUtils.random(5, 10);
+        }
+    }
+
+    private void timeLifePowerUps(float dt) {
+        lifePowerUpTimer += dt;
+        if (lifePowerUpTimer >= lifePowerUpInterval){
+            spawnPowerUps();
+            lifePowerUpTimer = 0;
+            lifePowerUpInterval = MathUtils.random(10, 20);
         }
     }
 

@@ -150,4 +150,8 @@ public class Player extends Character{
             explosion.drawPlayer(batch, explosionPositionShip); // Usamos la posicón de la explosion
         }
     }
+
+    public void addLife(){
+        lives++;
+    }
 }
