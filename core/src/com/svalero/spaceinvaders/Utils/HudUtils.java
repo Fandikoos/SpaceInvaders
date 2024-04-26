@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.svalero.spaceinvaders.domain.Player;
+import com.svalero.spaceinvaders.manager.ResourceManager;
 
 
 public class HudUtils {
@@ -34,12 +35,12 @@ public class HudUtils {
         stage.addActor(scoreLabel);
 
 
-        TextureRegion heartImage = new TextureRegion(new Texture(Gdx.files.internal("hud/heart.png")));
+        TextureRegion heartImage = new TextureRegion(ResourceManager.getTexture("heart"));
         livesImage = new Image(heartImage);
         livesImage.setPosition(getPositionForImage(livesLabel, livesImage), livesLabel.getY() - 15);
         stage.addActor(livesImage);
 
-        TextureRegion coinImage = new TextureRegion(new Texture(Gdx.files.internal("hud/score.png")));
+        TextureRegion coinImage = new TextureRegion(ResourceManager.getTexture("score"));
         scoreImage = new Image(coinImage);
         scoreImage.setPosition(getPositionForImage(scoreLabel, scoreImage) - 10, scoreLabel.getY() - 25);
         stage.addActor(scoreImage);
