@@ -83,7 +83,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 VisUI.dispose();
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
 
@@ -115,7 +115,6 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Pinta la UI en la pantalla
         stage.act(dt);
         stage.draw();
     }
