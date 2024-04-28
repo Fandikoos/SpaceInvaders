@@ -25,7 +25,6 @@ public class EnemyFleet {
     private float limitFleetWidthX = 120;
     private float missileTimer;  //Temporizador para el disparo de misiles
     Preferences prefs;
-    Sound shots;
 
 
     public EnemyFleet(Texture texture, float screenWidth, float screenHeight){

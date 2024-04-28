@@ -14,7 +14,6 @@ public class RenderManager implements Disposable {
     SpriteBatch batch;
     SpriteManager spriteManager;
     Texture background = new Texture("background/game.png");
-    boolean pause;
     HudUtils hud;
     private float bossScale = 2f;
 
@@ -106,26 +105,28 @@ public class RenderManager implements Disposable {
     }
 
     public void drawBossScreen(float dt){
-        ScreenUtils.clear(1, 0, 0, 1);
+        if (!spriteManager.pause){
+            ScreenUtils.clear(1, 0, 0, 1);
 
-        batch.begin();
+            batch.begin();
 
-        batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        if (spriteManager.player.isAlive()){
-            drawPlayer();
-            drawMissilePlayer();
+            if (spriteManager.player.isAlive()){
+                drawPlayer();
+                drawMissilePlayer();
+            }
+            if (spriteManager.boss.isAlive()){
+                drawBoss(dt);
+                drawMissileBoss();
+            }
+            drawPowerUps();
+            drawAsteroids();
+            hud.render();
+            spriteManager.player.renderExplosion(batch);
+            spriteManager.boss.renderExplosion(batch);
+            batch.end();
         }
-        if (spriteManager.boss.isAlive()){
-            drawBoss(dt);
-            drawMissileBoss();
-        }
-        drawPowerUps();
-        drawAsteroids();
-        hud.render();
-        spriteManager.player.renderExplosion(batch);
-        spriteManager.boss.renderExplosion(batch);
-        batch.end();
     }
 
     @Override

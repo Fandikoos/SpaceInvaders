@@ -25,7 +25,6 @@ public class Player extends Character{
 
     public int lives;
     public int score;
-    public int level;
     private float screenWidth;
     private final float screenHeight;
     private List<Missile> missiles;
@@ -186,5 +185,10 @@ public class Player extends Character{
 
     public void addLife(){
         lives++;
+    }
+
+    public void setPosition(float x, float y){
+        position.set(x, y);
+        rect.setPosition(x, y);
     }
 }

@@ -41,6 +41,4 @@ public class ConfigurationManager {
         prefs.flush();
     }
 
-
-
 }

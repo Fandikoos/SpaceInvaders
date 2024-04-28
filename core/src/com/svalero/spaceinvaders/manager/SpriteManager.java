@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.svalero.spaceinvaders.Utils.HudUtils;
 import com.svalero.spaceinvaders.domain.*;
 import com.svalero.spaceinvaders.screen.GameScreen;
-import com.svalero.spaceinvaders.screen.MainMenuScreen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +22,7 @@ public class SpriteManager implements Disposable {
 
     public Boss boss;
     public Player player;
-    boolean pause;
+    public boolean pause;
     private HudUtils hud;
     public List<Asteroid> fallAsteroids;
     private float asteroidTimer;
@@ -263,13 +262,17 @@ public class SpriteManager implements Disposable {
     //Eventos de la pantalla
     private void handleGameScreeninputs(){
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen());
-            MusicManager.stopGameMusic();
+            pause = true;
+            MusicManager.playGameMusic();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             pause = !pause;
         }
+    }
+
+    public boolean isPaused() {
+        return pause;
     }
 
 
